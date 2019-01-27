@@ -1,44 +1,69 @@
 <html>
-<link href="Assets/HomePageAssets.css" rel="stylesheet" type="text/css">
-<link href="Assets/FontAssets.css" rel="stylesheet" type="text/css">
-<link href="Assets/CommonAssets.css" rel="stylesheet" type="text/css">
-<div id="MonocleHeaderBar">
-    <body>
-        <a> Registration Complete</a>
 <?php
-$servername = "localhost";
+session_start(); 
+$servername = "localhost:3306";
 $account = "PHPConnection2";
 $dbname = "monoclmain";
 $password="PHPPassword12";
 
-
-$UserName =$_POST['UserName'];
-$FirstName = $_POST['FirstName'];
-$LastName = $_POST['LastName'];
-$EmailAddress = $_POST['Email'];
-$ClassCode = $_POST['ClassCode'];
+$validation=array();
 
         
 $ConnectionFunction = mysqli_connect($servername,$account, $password);
 if(!$ConnectionFunction){
     die("Connection Failed");
     }
+    
 echo "Console Message : Connection Succeeded";
-$UserName = mysqli_real_escape_string($ConnectionFunction,$UserName);        
-$FirstName = mysqli_real_escape_string($ConnectionFunction,$FirstName);
-$LastName = mysqli_real_escape_string($ConnectionFunction,$LastName);
-$EmailAddress= mysqli_real_escape_string($ConnectionFunction,$Email);
-$ClassCode= mysqli_real_escape_string($ConnectionFunction,$ClassCode);
-$PasswordOriginal = $_POST['PwdInput'];
-$PasswordConfirmation = $_POST['PwdConfirmation'];
+$UserName = "";
+$FirstName ="";
+$LastName="";
+$EmailAddress="";
+$ClassCode="";
+$PasswordOriginal="";
+$PasswordConfirmation="";
+if(isset($_POST['SignUpButtonGreen'])){
+
+
+$UserName = mysqli_real_escape_string($ConnectionFunction,$_POST['UserName']);
+
+$FirstName = mysqli_real_escape_string($ConnectionFunction,$_POST['FirstName']);
+$LastName = mysqli_real_escape_string($ConnectionFunction,$_POST['LastName']);
+$EmailAddress= mysqli_real_escape_string($ConnectionFunction,$_POST['Email']);
+$ClassCode= mysqli_real_escape_string($ConnectionFunction,$_POST['ClassCode']);
+$PasswordOriginal = mysqli_real_escape_string($ConnectionFunction,$_POST['PwdInput']);
+$PasswordConfirmation = mysqli_real_escape_string($ConnectionFunction,$_POST['PwdConfirmation']);
+if(empty($UserName)){
+    array_push($validation,"Empty username");
+}
+if(empty($LastName)){
+    array_push($validation,"Empty LastName");
+}
+if(empty($FirstName)){
+    array_push($validation,"Empty FirstName");
+}
+if(empty($EmailAddress)){
+    echo "Email empty";
+    array_push($validation,"Empty Email");
+}
+if($PasswordOriginal != $PasswordConfirmation){
+    array_push($validation,"Passwords dont match");
+}
+echo $UserName;
+echo $ClassCode;
 $querypublicdetails = "INSERT INTO userdetails (UserName,ClassID) VALUES ($UserName,$ClassCode)";
-$queryprivatedetails ="INSERT INTO userprivatedetails (FirstName,LastName,ClassID,PasswordHash,EmailAdress) VALUES ($FirstName,$LastName,$ClassCode,$PasswordOrignial,$EmailAddressl)";
+$queryprivatedetails ="INSERT INTO userprivatedetails (FirstName,LastName,ClassID,PasswordHash,EmailAdress) VALUES ($FirstName,$LastName,$ClassCode,$PasswordOriginal,$EmailAddress)";
         
 $result = mysqli_query($ConnectionFunction,$queryprivatedetails);
 if($result){
-    echo "success";
+    echo "Query Success";
 }
-mysqli_close($ConnectionFunction);
+if(!$result){
+    echo "Query Failure";
+}
+}
+echo "\n"
+. "Console Message : Sign up not clicked";
 ?>
         <a> Test</a>  
 </body>
