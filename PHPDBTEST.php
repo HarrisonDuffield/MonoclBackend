@@ -10,11 +10,15 @@ $validation=array();
 
         
 $ConnectionFunction = mysqli_connect($servername,$account, $password);
+
+$ConnectionTesting = mysqli_get_server_info($ConncetionFunction);
+
+echo $ConnectionTesting;
 if(!$ConnectionFunction){
     die("Connection Failed");
-    }
     
-echo "Console Message : Connection Succeeded";
+    }
+   
 $UserName = "";
 $FirstName ="";
 $LastName="";
@@ -23,7 +27,6 @@ $ClassCode="";
 $PasswordOriginal="";
 $PasswordConfirmation="";
 if(isset($_POST['SignUpButtonGreen'])){
-
 
 $UserName = mysqli_real_escape_string($ConnectionFunction,$_POST['UserName']);
 
@@ -43,28 +46,53 @@ if(empty($FirstName)){
     array_push($validation,"Empty FirstName");
 }
 if(empty($EmailAddress)){
-    echo "Email empty";
     array_push($validation,"Empty Email");
 }
+if(empty($PasswordOriginal)){
+    array_push($validation,"Password Field is empty");
+}
 if($PasswordOriginal != $PasswordConfirmation){
-    array_push($validation,"Passwords dont match");
+    array_push($validation,"Passwords don't match");
 }
-echo $UserName;
-echo $ClassCode;
-$querypublicdetails = "INSERT INTO userdetails (UserName,ClassID) VALUES ($UserName,$ClassCode)";
-$queryprivatedetails ="INSERT INTO userprivatedetails (FirstName,LastName,ClassID,PasswordHash,EmailAdress) VALUES ($FirstName,$LastName,$ClassCode,$PasswordOriginal,$EmailAddress)";
-        
-$result = mysqli_query($ConnectionFunction,$queryprivatedetails);
-if($result){
-    echo "Query Success";
+$UserNameCheck = "SELECT * FROM userdetails WHERE (UserName) = 'Admin' LIMIT 1";
+$EmailCheck = "SELECT * FROM userprivatedetails WHERE EmailAddress = '$EmailAddress' LIMIT 1";
+$UserNameCheckResult = mysqli_query($ConnectionFunction, $UserNameCheck);
+if($UserNameCheckResult==False){
+    array_push($validation,"Failure to see if username already there");
+    
 }
-if(!$result){
-    echo "Query Failure";
+else{
+    foreach($UserNameCheckResult as $row){
+        echo $row['UserName'];
+    }
+}
+
+if(empty($ClassCode)){
+    $ClassCode=404;
+}
+
+if(count($validation)==0){
+    echo "count is 0";
+    $CreationPublicQuery = "INSERT INTO userdetails (UserName,ClassID) VALUES ($UserName,$ClassCode)";
+    $CreationPrivateQuery ="INSERT INTO userprivatedetails (FirstName,LastName,ClassID,PasswordHash,EmailAddress) VALUES ($FirstName,$LastName,$ClassCode,$PasswordOriginal,$EmailAddress)";
+    $result = mysqli_query($ConnectionFunction,$CreationPublicQuery);
+    $result2 = mysqli_query($ConnectionFunction,$CreationPrivateQuery);
+    if($result){
+        echo "Query Success";
+    }
+    if(!$result){
+        echo "Query Failure";
+    }
+    if($result2){
+        echo "Query Success";
+    }
+    if(!$result2){
+        echo "Query Failure";
+    }
 }
 }
-echo "\n"
-. "Console Message : Sign up not clicked";
+
 ?>
-        <a> Test</a>  
+
 </body>
 </html>
