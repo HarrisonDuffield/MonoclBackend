@@ -24,7 +24,7 @@ $ClassCode="";
 $PasswordOriginal="";
 $PasswordConfirmation="";
 $UserIDToInsert="";
-
+while(isset($_POST['SignUpButtonGreen'])&& (count($validation)<1)){
 $UserName = mysqli_real_escape_string($ConnectionFunction,$_POST['UserName']);
 $FirstName = mysqli_real_escape_string($ConnectionFunction,$_POST['FirstName']);
 $LastName = mysqli_real_escape_string($ConnectionFunction,$_POST['LastName']);
@@ -88,7 +88,7 @@ else{
         }
     }
 }
-while(isset($_POST['SignUpButtonGreen'])&& (count($validation)<1)){
+
 if(empty($ClassCode)){
     $ClassCode=404;
 }
