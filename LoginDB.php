@@ -33,18 +33,12 @@ $PasswordHashRetreival=mysqli_query($ConnectionFunction,$PasswordHashRetreivalQu
 
 $EmailVerificationRetreivalQuery ="SELECT AccountVerified FROM userdetails WHERE(UserName) = '$UserName' LIMIT1";
 $EmailVerificationRetreival=mysqli_query($ConnectionFunction,$EmailVerificationRetreivalQuery);
-$HashedEntryPassword=password_hash($Password,PASSWORD_DEFAULT);
 array_push($validation,"Tehcni");
-if($PasswordHashRetreival==False){
-   array_push($validation,"Error Technical : Failure to access DB");
-    
-}
-else{
-    foreach($PasswordHashRetreival as $row){
-        echo $row['PasswordHash'];
-        if ($row['PasswordHash'] == $HashedEntryPassword){
+foreach($PasswordHashRetreival as $row){            
+        if (password_verify($Password,$row['PasswordHash'])){
             array_push($validation,"Passwords match");
-            //Password  verification complete;
+                
+           //Password  verification complete;
             break;
         }
         else{
@@ -54,7 +48,7 @@ else{
             break;
         }
     }
-}
+
 }
 ?>
 </html>
