@@ -49,6 +49,14 @@ if(empty($EmailAddress)){
     array_push($validation,"Empty Email");
     unset($_POST['SignUpButtonGreen']);
 }
+if(!empty($EmailAddress)){
+    $EmailAddressVerify = filter_var($EmailAddress,FILTER_VALIDATE_EMAIL);
+    if($EmailAddressVerify){
+        echo "Email is fine";
+    }
+    else{
+        array_push($validation,"Email is Not valid");
+}
 if(empty($PasswordOriginal)){
     array_push($validation,"Password Field is empty");
     unset($_POST['SignUpButtonGreen']);
