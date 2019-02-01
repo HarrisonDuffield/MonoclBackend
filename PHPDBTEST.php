@@ -32,6 +32,7 @@ $EmailAddress= mysqli_real_escape_string($ConnectionFunction,$_POST['Email']);
 $ClassCode= mysqli_real_escape_string($ConnectionFunction,$_POST['ClassCode']);
 $PasswordOriginal = mysqli_real_escape_string($ConnectionFunction,$_POST['PwdInput']);
 $PasswordConfirmation = mysqli_real_escape_string($ConnectionFunction,$_POST['PwdConfirmation']);
+$EmailAddress = filter_var($EmailAddress,FILTER_SANITIZE_EMAIL);
 
 if(empty($UserName)){
     array_push($validation,"Empty username");
@@ -50,9 +51,13 @@ if(empty($EmailAddress)){
     unset($_POST['SignUpButtonGreen']);
 }
 if(!empty($EmailAddress)){
+    
     $EmailAddressVerify = filter_var($EmailAddress,FILTER_VALIDATE_EMAIL);
+    
     if($EmailAddressVerify){
-        echo "Email is fine";
+        array_push($validation,"Email is fine");
+        $EmailVerificationHash = md5($EmailAddress);
+        
     }
     else{
         array_push($validation,"Email is Not valid");
@@ -129,12 +134,15 @@ if(count($validation)==0){
     }
     }
     
-    $CreationPublicQuery = "INSERT INTO userdetails (UserID,UserName,ClassID) VALUES ('$UserIDToInsert','$UserName','$ClassCode')";
+    $CreationPublicQuery = "INSERT INTO userdetails (UserID,UserName,EmailVerificationHash,ClassID) VALUES ('$UserIDToInsert','$UserName','$EmailVerificationHash',$ClassCode')";
     $PublicQueryExecution= mysqli_query($ConnectionFunction,$CreationPublicQuery);
     echo $CreationPublicQuery;
     
     if($PublicQueryExecution){
         echo "  Public Query Success  ";
+        include(EmailVerification.php);
+        EmailMessageSend($EmailAddress,$EmailVerificationHash);        
+    
     }
     if(!$PublicQueryExecution){
         echo "  Public Query Failure    ";
