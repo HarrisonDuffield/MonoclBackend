@@ -1,4 +1,3 @@
-<html>
 <?php
 session_start(); 
 $servername = "localhost:3306";
@@ -55,7 +54,7 @@ if(!empty($EmailAddress)){
     $EmailAddressVerify = filter_var($EmailAddress,FILTER_VALIDATE_EMAIL);
     
     if($EmailAddressVerify){
-        array_push($validation,"Email is fine");
+        
         $EmailVerificationHash = md5($EmailAddress);
         
     }
@@ -107,12 +106,12 @@ if(empty($ClassCode)){
 }
 if(count($validation)==0){
     $PasswordHashed = password_hash($PasswordOriginal,PASSWORD_DEFAULT);
-    echo $PasswordHashed;
+    
     
     
     $CreationPrivateQuery ="INSERT INTO userprivatedetails (FirstName,LastName,ClassID,PasswordHash,EmailAddress) VALUES ('$FirstName','$LastName','$ClassCode','$PasswordHashed','$EmailAddress')";
-    $PrivateQueryExecution = mysqli_query($ConnectionFunction,$CreationPrivateQuery);
-    
+    $PrivateQueryExecution = mysqli_query($ConnectionFunction,$CreationPrivateQuery) or die(mysqli_error($ConnectionFunction));
+    echo $PrivateQueryExecution;
     if($PrivateQueryExecution){
         echo "  Private Query Success   ";
     }
@@ -131,28 +130,35 @@ if(count($validation)==0){
     else{
     foreach($UserIDEmailCheckResult as $row){
         $UserIDToInsert=$row['UserID'];
+        echo $UserIDToInsert;
     }
     }
     
-    $CreationPublicQuery = "INSERT INTO userdetails (UserID,UserName,EmailVerificationHash,ClassID) VALUES ('$UserIDToInsert','$UserName','$EmailVerificationHash',$ClassCode')";
-    $PublicQueryExecution= mysqli_query($ConnectionFunction,$CreationPublicQuery);
+    $CreationPublicQuery = "INSERT INTO userdetails (UserID,UserName,EmailVerificationHash,ClassID) VALUES ('$UserIDToInsert,'$UserName','$EmailVerificationHash',$ClassCode')";
+    $PublicQueryExecution= mysqli_query($ConnectionFunction,$CreationPublicQuery) or die(mysqli_error($ConnectionFunction));
     echo $CreationPublicQuery;
-    
+    echo $PublicQueryExecution;
     if($PublicQueryExecution){
         echo "  Public Query Success  ";
-        include(EmailVerification.php);
-        EmailMessageSend($EmailAddress,$EmailVerificationHash);        
-    
+        $EmailSubject = " Monocl Account Verification";
+        $Message = '
+            You have successfully created an account at Monocl
+            
+            please click here to verify the account
+            
+            http://localhost/EmailVerification.php?Hash='.$EmailVerificationHash.';
+            
+       ';
+        
+        $SentFrom = "From:monoclnoreply@gmail.com";
+        $mailsend=mail("monoclnoreply@gmail.com",$EmailSubject,$Message,$SentFrom);      
+        echo $mailsend;
     }
-    if(!$PublicQueryExecution){
+    else{
         echo "  Public Query Failure    ";
     }
     break;
 }
 }
-
-
+}
 ?>
-
-</body>
-</html>
