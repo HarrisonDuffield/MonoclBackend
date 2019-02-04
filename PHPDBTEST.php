@@ -134,10 +134,8 @@ if(count($validation)==0){
     }
     }
     
-    $CreationPublicQuery = "INSERT INTO userdetails (UserID,UserName,EmailVerificationHash,ClassID) VALUES ('$UserIDToInsert,'$UserName','$EmailVerificationHash',$ClassCode')";
+    $CreationPublicQuery = "INSERT INTO userdetails (UserID,UserName,EmailVerificationHash,ClassID) VALUES ('$UserIDToInsert','$UserName','$EmailVerificationHash','$ClassCode')";
     $PublicQueryExecution= mysqli_query($ConnectionFunction,$CreationPublicQuery) or die(mysqli_error($ConnectionFunction));
-    echo $CreationPublicQuery;
-    echo $PublicQueryExecution;
     if($PublicQueryExecution){
         echo "  Public Query Success  ";
         $EmailSubject = " Monocl Account Verification";
