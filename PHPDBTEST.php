@@ -1,5 +1,6 @@
 <?php
-session_start(); 
+session_start();
+
 $servername = "localhost:3306";
 $account = "PHPConnection2";
 $dbname = "monoclmain";
@@ -138,19 +139,13 @@ if(count($validation)==0){
     $PublicQueryExecution= mysqli_query($ConnectionFunction,$CreationPublicQuery) or die(mysqli_error($ConnectionFunction));
     if($PublicQueryExecution){
         echo "  Public Query Success  ";
-        $EmailSubject = " Monocl Account Verification";
-        $Message = '
-            You have successfully created an account at Monocl
-            
-            please click here to verify the account
-            
-            http://localhost/EmailVerification.php?Hash='.$EmailVerificationHash.';
-            
-       ';
-        
-        $SentFrom = "From:monoclnoreply@gmail.com";
-        $mailsend=mail("monoclnoreply@gmail.com",$EmailSubject,$Message,$SentFrom);      
-        echo $mailsend;
+        include ("EmailVerifcation.php");
+        if(SendEmail($EmailAddress,$EmailVerificationHash)){
+            echo "Verification EMail has been sent";
+        }      
+        else{
+            echo "Email failed";
+        }
     }
     else{
         echo "  Public Query Failure    ";
