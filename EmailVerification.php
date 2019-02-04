@@ -1,18 +1,37 @@
 <?php
-   function  EmailMessageSend($EmailAddress,$EmailVerificationHash){
-    $EmailSubject = " Monocl Account Verification";
-    $Message = '
-            You have successfully created an account at Monocl
-            
-            please click here to verify the account
-            
-            http://localhost/EmailVerification.php?Hash='.$EmailVerificationHash.';
-            
-       ';
-    $SentFrom = "From:monocltest@gmail.com";
-    mail($EmailAddress,$EmailSubject,$Message,$SentFrom);
-}
-function EmailMessageRecieved(){
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require ('PHPMailer-6.0.7\PHPMailer-6.0.7\src\PHPMailer.php');
+require ('PHPMailer-6.0.7\PHPMailer-6.0.7\src\Exception.php');
+require ('PHPMailer-6.0.7\PHPMailer-6.0.7\src\SMTP.php');
+$MailFunction = new PHPMailer(true);
+$MailFunction->SMTPDebug=2;
+$MailFunction ->Username ="monoclnoreply@gmail.com";
+$MailFunction ->Password ="insertpassword";
+$MailFunction ->IsSMTP(true);
+$MailFunction ->Host ="smtp.gmail.com";
+$MailFunction ->Port = 465;
+$MailFunction ->FromName = "Moncol No Reply";
+$MailFunction ->SMTPAuth =true;
+$MailFunction->SMTPSecure="ssl";
+$MailFunction ->From = $MailFunction ->Username;
+   
+//function SendEmail($Destination,$EmailVerificationHash){
+    $MailFunction ->AddAddress("insertadress");
+    $MailFunction ->Subject =" Monocl Account Verification";
+    $MailFunction ->Body = "You have successfully ";        
+         
     
-}
+    if($MailFunction->Send()){
+        //return true;
+        echo "true";
+        
+    }
+    else{
+        //return false;
+        echo "false";
+        echo $MailFunction->ErrorInfo;
+    }
+    echo "test";
+//}
 ?>
