@@ -21,7 +21,7 @@ $MailFunction ->AddAddress($Destination);
 $MailFunction ->Subject =" Monocl Account Verification";
 $MailFunction ->Body = "You have successfully activated your account please click the link to go"
         . "activate your account "
-        . "http://127.0.0.1/AccountVerified.php?VerifyString='$EmailVerificationHash'"; 
+        . "http://127.0.0.1/AccountVerified.php?VerifyString=$EmailVerificationHash"; 
 if($MailFunction->Send()){
     return true;       
     }
