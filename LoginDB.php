@@ -1,6 +1,6 @@
 <html>
 <?php
-session_start(); 
+session_start();
 $servername = "localhost:3306";
 $account = "PHPConnection2";
 $dbname = "monoclmain";
@@ -9,7 +9,7 @@ $ConnectionFunction = mysqli_connect($servername, $account, $password, $dbname);
 $validation = array();
 $UserName = "";
 $Password = "";
-
+Require("..\MoncolBackend\EmailVerification.php");
 
 if(isset($_POST['LoginButtonGreen'])){
 $UserName = mysqli_real_escape_string($ConnectionFunction,$_POST['UserName']);
@@ -40,6 +40,8 @@ foreach($PasswordHashRetreival as $row){
                     //Email is Verfifed
                     echo "Email Verified";
                     echo "Log In Approved";
+                    $_SESSION["UserLoggedIn"] = $UserID;
+                    
                 }
                 else{
                     //Email is not verified;
