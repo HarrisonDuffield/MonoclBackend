@@ -139,7 +139,7 @@ if(count($validation)==0){
     $PublicQueryExecution= mysqli_query($ConnectionFunction,$CreationPublicQuery) or die(mysqli_error($ConnectionFunction));
     if($PublicQueryExecution){
         echo "  Public Query Success  ";
-        include ("EmailVerifcation.php");
+        require ("C:\Users\hpd12\Desktop\MonoclGitHubRepo\MonoclBackend\EmailVerification.php");
         if(SendEmail($EmailAddress,$EmailVerificationHash)){
             echo "Verification EMail has been sent";
         }      
