@@ -138,7 +138,7 @@ if(count($validation)==0){
     $CreationPublicQuery = "INSERT INTO userdetails (UserID,UserName,EmailVerificationHash,ClassID) VALUES ('$UserIDToInsert','$UserName','$EmailVerificationHash','$ClassCode')";
     $PublicQueryExecution= mysqli_query($ConnectionFunction,$CreationPublicQuery) or die(mysqli_error($ConnectionFunction));
     if($PublicQueryExecution){
-        echo "  Public Query Success  ";
+        //echo "  Public Query Success  ";
         require ("C:\Users\hpd12\Desktop\MonoclGitHubRepo\MonoclBackend\EmailVerification.php");
         if(SendEmail($EmailAddress,$EmailVerificationHash)){
             echo "Verification EMail has been sent";
@@ -148,7 +148,7 @@ if(count($validation)==0){
         }
     }
     else{
-        echo "  Public Query Failure    ";
+        //echo "  Public Query Failure    ";
     }
     break;
 }
