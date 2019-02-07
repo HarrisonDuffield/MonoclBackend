@@ -5,7 +5,6 @@
        $AnswerListArray = array();
        $Language = array();
        session_start();
-       echo "test";
        $servername = "localhost:3306";
        $account = "PHPConnection2";
        $dbname = "monoclmain";
