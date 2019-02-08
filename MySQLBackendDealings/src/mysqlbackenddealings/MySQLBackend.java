@@ -1,4 +1,8 @@
 package mysqlbackend;
+import java.io.File;
+import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 public class MySQLBackend {
@@ -6,6 +10,7 @@ public class MySQLBackend {
     public static String UserName ="JavaConnection";
     public static String Password ="JavaPassword";
     public static String Driver = "com.mysql.jdbc.Driver";
+    public static ArrayList QuestionIDArray = new ArrayList();
     public static void main(String[] args) {
         /**order of operation:
         Connects to DB
@@ -17,18 +22,67 @@ public class MySQLBackend {
         try{            
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocation,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
-        ResultSet results = statement.executeQuery("Select * FROM answertable");       
-        System.out.println();
-        System.out.println(results.findColumn("QuestionID"));
-        while(results.next()){
-            System.out.println(results.getString(results.findColumn("AnswerID")));
+        ResultSet QuestionIDResults = statement.executeQuery("SELECT DISTINCT QuestionID FROM answertable");
+        int counter =0;
+        while(QuestionIDResults.next()){            
+            System.out.println("QuestionID:"+QuestionIDResults.getString(counter));
+            //statements to gather the results;
+            String QuestionIDString = QuestionIDResults.getString(counter);
+            ResultSet AnswerReturnResults = statement.executeQuery("SELECT AnswerText FROM answertable WHERE QuestionID ="+QuestionIDString);
+            ArrayList AnswerArrayList = new ArrayList();
+            while(AnswerReturnResults.next()){
+                AnswerArrayList.add
+            }
+            //funcction to prepare the output file with the string to output;
+            if(PushToFile(results.getString(counter),OutputStringCreator(QuestionIDString))){      
+                ConnectionFunction.close();
+                System.out.println("Congratulations");
+                }
+            else{
+                System.err.println("Push to file didn't work");
+            }
         }
-        ConnectionFunction.close();
-        System.out.println("Congratulations");
+        }             
+        catch(Exception FalseSQLQueryResults){
+            FalseSQLQueryResults.printStackTrace();
         }
-        catch(Exception c){
-            System.out.println(c);
-        }               
+    }
+    
+    
+    
+    public static boolean PushToFile(String QuestionID,String OutputToPush){
+        String QustionIDPrepatoryString;
+        String DirectoryString = "..\\MonoclAssetFiles\\"+(QuestionID)+".txt";
+        File FileAtDirectory = new File(DirectoryString);
+        try{
+            Files.deleteIfExists(Paths.get(DirectoryString));
+            //file already exists
+            //more efficent to just delete the file rather than  
+            //try appending it and checcking if  the reuslts are the same
+            FileAtDirectory.delete();
+        }
+        catch(Exception FileDeleteIfExistsExemption){
+            //file does not exist - does not require to be deleted;
+           FileDeleteIfExistsExemption.printStackTrace();
+           return false;
+           
+        }
+        try{
+            FileWriter FileWriter = new FileWriter(FileAtDirectory);
+            FileWriter.write(OutputToPush);
+            FileWriter.close();
+            return true;
+        }
+        catch(Exception FileWriterException){
+                FileWriterException.printStackTrace();
+                return false;
         }
         
-}
+        
+    }
+    public static String OutputStringCreator(String QuestionID,ArrayList AnswerArray){
+        String OutputString = QuestionID ;
+        
+    }
+  }
+        
