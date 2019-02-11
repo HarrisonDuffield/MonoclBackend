@@ -5,12 +5,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import mysqlbackenddealings.TableItem;
 public class MySQLBackend {
     public static String ConnectionLocation = "jdbc:mysql://localhost:3306/monoclmain";
     public static String UserName ="JavaConnection";
     public static String Password ="JavaPassword";
     public static String Driver = "com.mysql.jdbc.Driver";
     public static ArrayList QuestionIDArray = new ArrayList();
+    public static ArrayList<TableItem> WordAndCounts = new ArrayList<TableItem>();
     public static void main(String[] args) {
         /**order of operation:
         Connects to DB
@@ -29,18 +33,19 @@ public class MySQLBackend {
             //statements to gather the results;
             String QuestionIDString = QuestionIDResults.getString(counter);
             ResultSet AnswerReturnResults = statement.executeQuery("SELECT AnswerText FROM answertable WHERE QuestionID ="+QuestionIDString);
-            ArrayList AnswerArrayList = new ArrayList();
+            ArrayList<String> AnswerArrayList = new ArrayList<String>();
             while(AnswerReturnResults.next()){
-                AnswerArrayList.add
+                AnswerArrayList.add(AnswerReturnResults.getString("AnswerText"));
             }
             //funcction to prepare the output file with the string to output;
-            if(PushToFile(results.getString(counter),OutputStringCreator(QuestionIDString))){      
+            if(PushToFile(QuestionIDResults.getString(counter),OutputStringCreator(QuestionIDString,AnswerArrayList))){      
                 ConnectionFunction.close();
                 System.out.println("Congratulations");
                 }
             else{
                 System.err.println("Push to file didn't work");
             }
+            counter++;
         }
         }             
         catch(Exception FalseSQLQueryResults){
@@ -80,9 +85,41 @@ public class MySQLBackend {
         
         
     }
-    public static String OutputStringCreator(String QuestionID,ArrayList AnswerArray){
-        String OutputString = QuestionID ;
+    public static String OutputStringCreator(String QuestionID){
+        String OutputString = "QuestionID :"+"\n";
+        OutputString = OutputString + WordAndCounts.get(0).HeaderCreator();
+        for(int i=0;i<WordAndCounts.size();i++){
+            OutputString=OutputString+WordAndCounts.get(i).TableToPrintReturn();
+        }
+        return OutputString;
+        
         
     }
-  }
+    public static void WordSplitTablePopulator(String QuestionID,ArrayList<String> AnswerArray){
+        for(int i=0;i<AnswerArray.size();i++){//split by answer
+            String[] ArraySplit =AnswerArray.get(i).split(" ");
+            ArrayList ArraySplitList = new ArrayList(Arrays.asList(ArraySplit));
+            for(int x=0;x<ArraySplitList.size();x++){//split by word
+                boolean ispresent= false;
+                boolean forloopcomplete=false;
+               for(int y=0;y<WordAndCounts.size();y++){//checks each word in there
+                if(WordAndCounts.get(y).getWord() == ArraySplitList.get(x)){
+                   WordAndCounts.get(x).CountIncreaser();
+                   ispresent=true;
+                   forloopcomplete=true;
+                   break;
+                }
+                else{
+                    forloopcomplete=true;
+                    ispresent=false;
+                }
+               }
+               if(ispresent == false && forloopcomplete==true){
+                   WordAndCounts.add(new TableItem(ArraySplitList.get(x).toString(),1));
+               }
+            }
+       }
+    }
+    
+}
         

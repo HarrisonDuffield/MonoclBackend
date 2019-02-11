@@ -6,3 +6,7 @@ MySQLBackendDealings/nbproject/build-impl.xml
 MySQLBackendDealings/manifest.mf
 MySQLBackendDealings/build.xml
 MySQLBackendDealings/nbproject/project.properties
+/MySQLBackendDealings/build/
+MySQLBackendDealings/lib/CopyLibs/org-netbeans-modules-java-j2seproject-copylibstask.jar
+MySQLBackendDealings/lib/mysql-connector-java-8.0.15.jar
+MySQLBackendDealings/lib/nblibraries.properties
