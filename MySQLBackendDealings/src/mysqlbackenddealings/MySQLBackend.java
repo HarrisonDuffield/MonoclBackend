@@ -53,8 +53,10 @@ public class MySQLBackend {
            
         }
         for(int i=0;i<AnswerArray.size();i++){
-            String[] SplitByWord=AnswerArray.get(i).split(""); 
+            String[] SplitByWord=AnswerArray.get(i).split(" "); 
+            System.out.println(SplitByWord);
             for (String Word : SplitByWord) {
+                System.out.println(Word);
                 String QueryToSend = "INSERT INTO "+QuestionID+"(MainWord) VALUES ("+Word+");";
                 if(InsertData(QuestionID,QueryToSend)){
                     System.out.println("Query was succesful");
