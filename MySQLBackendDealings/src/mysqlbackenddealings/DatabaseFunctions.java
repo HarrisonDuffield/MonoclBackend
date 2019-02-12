@@ -48,7 +48,7 @@ public class DatabaseFunctions {
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
-        statement.execute("DROP TABLE "+QuestionID+";");
+        statement.execute("DROP TABLE `"+QuestionID+"`;");
         CreateTable(QuestionID);
         return true;
     }
