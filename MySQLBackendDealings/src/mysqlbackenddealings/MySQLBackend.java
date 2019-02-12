@@ -13,7 +13,7 @@ public class MySQLBackend {
         does the keyword procedure*/
         try{
         ResultSet QuestionIDResults = SearchQueryReturn("SELECT DISTINCT QuestionID FROM answertable");
-        int counter =0;
+        int counter =1;
         while(QuestionIDResults.next()){            
             System.out.println("QuestionID:"+QuestionIDResults.getString(counter));
             //statements to gather the results;
