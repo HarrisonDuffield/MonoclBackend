@@ -49,7 +49,9 @@ public class DatabaseFunctions {
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
         statement.execute("DROP TABLE `"+QuestionID+"`;");
-        CreateTable(QuestionID);
+        if(CreateTable(QuestionID)){
+            System.out.println("Table recreated");
+        };
         return true;
     }
         catch(Exception DeleteFailureQuery){
@@ -79,7 +81,7 @@ public class DatabaseFunctions {
     }
     public static boolean InsertData(String QuestionID,String Query){
         try{
-        Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocation,UserName,Password);
+        Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
         statement.executeUpdate(Query);
         ResultSet QueryToReturn = ConnectionFunction.getMetaData().getTables(null,null,QuestionID,null);
