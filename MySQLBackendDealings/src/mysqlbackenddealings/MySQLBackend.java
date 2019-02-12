@@ -58,7 +58,7 @@ public class MySQLBackend {
             for (String Word : SplitByWord) {
                 System.out.println("Split Item : "+Word);
                 String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
-                        + " VALUES (NULL, NULL,"+Word+", NULL, '0', NULL);";
+                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '0', NULL);";
                 
                 System.out.println(QueryToSend);
                 if(InsertData(QuestionID,QueryToSend)){
