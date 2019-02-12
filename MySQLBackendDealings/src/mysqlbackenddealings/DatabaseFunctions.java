@@ -65,8 +65,7 @@ public class DatabaseFunctions {
 "`MainWord` LONGTEXT NOT NULL ,\n" +
 "`FollowingWord` LONGTEXT NULL DEFAULT NULL , \n" +
 "`Count` INT NOT NULL DEFAULT '0' ,\n" +
-"`Percentage` DECIMAL NULL DEFAULT NULL ,PRIMARY KEY(AnswerWordID)\n" +
-"ENGINE = InnoDB;";
+"`Percentage` DECIMAL NULL DEFAULT NULL ,PRIMARY KEY(AnswerWordID));";
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
