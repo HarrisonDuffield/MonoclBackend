@@ -14,7 +14,7 @@ import java.sql.*;
 public class DatabaseFunctions {
     
     public static String ConnectionLocation = "jdbc:mysql://localhost:3306/monoclmain";
-    public static String ConnectionLocationSecondaryTable="jdbc;mysql://localhost:3306/monoclquestionanswers";
+    public static String ConnectionLocationSecondaryTable="jdbc:mysql://localhost:3306/monoclquestionanswers";
     public static String UserName ="JavaConnection";
     public static String Password ="JavaPassword";
     public static String Driver = "com.mysql.jdbc.Driver";
