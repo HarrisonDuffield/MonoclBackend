@@ -25,7 +25,7 @@ public class MySQLBackend {
             }
             //funcction to prepare the output file with the string to output;
             if(WordSplitTablePopulator(QuestionIDString,AnswerArrayList) == true){
-                System.out.println("True");
+                ProceedingWordPopulator(QuestionIDString,AnswerArrayList);
             }
             else{
                 System.err.println("False");
@@ -56,6 +56,7 @@ public class MySQLBackend {
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
             System.out.println(SplitByWord);
             for (String Word : SplitByWord) {
+                if(!IsItemAlreadyPresent(Word)){
                 System.out.println("Split Item : "+Word);
                 String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
                         + " VALUES (NULL, NULL,'"+Word+"', NULL, '0', NULL);";
@@ -70,19 +71,36 @@ public class MySQLBackend {
                     return false;
                 }
             }
+            else{
+                System.out.println("Split Item : "+Word);
+                int CountToUse=1+GetCount(Word);
+                System.out.println("Count To Use : "+ CountToUse);
+                String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
+                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '"+CountToUse+"', NULL);";
+                
+                System.out.println(QueryToSend);   
+            }
         }
-        }
-        catch(Exception TablePresent){
+    }
+    }
+    catch(Exception TablePresent){
         TablePresent.printStackTrace();   
         return false;
         }
-        System.err.println("Error line 74");
+        System.err.println("Error line 90");
         return false;
                 
     
         
     
 }
+    public static boolean ProceedingWordPopulator(String QuestionID,ArrayList<String> AnswerArray){
+        return null;
+    }
+    public static boolean FollowingWordPopulator(ArrayList<String> AnswerArray){
+        return false;
+                
+    }
     
 }
         
