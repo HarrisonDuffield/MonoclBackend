@@ -43,6 +43,7 @@ public class DatabaseFunctions {
         while(QueryToReturn.next()){
             count=count+1;
         }
+        System.out.println("Item already present count"+count);
         if(count>1){
             return true;
         }
