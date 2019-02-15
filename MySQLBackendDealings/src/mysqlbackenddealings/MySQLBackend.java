@@ -54,12 +54,13 @@ public class MySQLBackend {
         }
         for(int i=0;i<AnswerArray.size();i++){
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
-            System.out.println(SplitByWord);
+            System.out.println("57"+SplitByWord);
             for (String Word : SplitByWord) {
                 if(!IsItemAlreadyPresent(QuestionID,Word)){
+                System.out.println("Item already present");
                 System.out.println("Split Item : "+Word);
                 String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
-                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '0', NULL);";
+                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '1', NULL);";
                 
                 System.out.println(QueryToSend);
                 if(InsertData(QuestionID,QueryToSend)){
@@ -72,13 +73,22 @@ public class MySQLBackend {
                 }
             }
             else{
+                System.out.println("Else selected");
                 System.out.println("Split Item : "+Word);
                 int CountToUse=1+GetCount(QuestionID,Word);
                 System.out.println("Count To Use : "+ CountToUse);
                 String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
                         + " VALUES (NULL, NULL,'"+Word+"', NULL, '"+CountToUse+"', NULL);";
                 
-                System.out.println(QueryToSend);   
+                System.out.println(QueryToSend);  
+                if(InsertData(QuestionID,QueryToSend)){
+                    System.out.println("Query was succesful");
+                    return true;
+                }
+                else{
+                    System.err.println("Query Unsuccsesful");
+                    return false;
+                }
             }
         }
     }
@@ -95,7 +105,7 @@ public class MySQLBackend {
     
 }
     public static boolean ProceedingWordPopulator(String QuestionID,ArrayList<String> AnswerArray){
-        return null;
+        return false;
     }
     public static boolean FollowingWordPopulator(ArrayList<String> AnswerArray){
         return false;
