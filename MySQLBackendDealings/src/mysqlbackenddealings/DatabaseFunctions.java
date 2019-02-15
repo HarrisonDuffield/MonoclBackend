@@ -36,7 +36,7 @@ public class DatabaseFunctions {
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
-        String Query ="SELECT 'Count' FROM`"+QuestionID+"`WHERE MainWord ="+WordToSearchFor+";";
+        String Query ="SELECT 'Count' FROM`"+QuestionID+"`WHERE MainWord ='"+WordToSearchFor+"';";
         System.out.println("Query :"+Query);
         ResultSet QueryToReturn = statement.executeQuery(Query);
         int count=0;
@@ -59,7 +59,7 @@ public class DatabaseFunctions {
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
-        ResultSet QueryToReturn = statement.executeQuery("SELECT 'Count' FROM"+QuestionID+"WHERE `MainWord` ="+WordToSearchFor+";");
+        ResultSet QueryToReturn = statement.executeQuery("SELECT 'Count' FROM"+QuestionID+"WHERE `MainWord` ='"+WordToSearchFor+"';");
         int Count=QueryToReturn.getInt("Count");
         return Count;
         }
