@@ -32,11 +32,11 @@ public class DatabaseFunctions {
             
         }
     }
-    public static boolean IsItemAlreadyPresent(String WordToSearchFor){
+    public static boolean IsItemAlreadyPresent(String QuestionID,String WordToSearchFor){
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
-        ResultSet QueryToReturn = statement.executeQuery("SELECT * FROM WHERE MainWord ='"+WordToSearchFor+"'");
+        ResultSet QueryToReturn = statement.executeQuery("SELECT 'Count' FROM"+QuestionID+"WHERE `MainWord` ="+WordToSearchFor+";");
         int count=0;
         while(QueryToReturn.next()){
             count=count+1;
@@ -53,11 +53,11 @@ public class DatabaseFunctions {
             return true;
         }
     }
-    public static int GetCount(String WordToSearchFor){
+    public static int GetCount(String QuestionID , String WordToSearchFor){
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
-        ResultSet QueryToReturn = statement.executeQuery("SELECT 'Count' FROM WHERE MainWord ='"+WordToSearchFor+"'");
+        ResultSet QueryToReturn = statement.executeQuery("SELECT 'Count' FROM"+QuestionID+"WHERE `MainWord` ="+WordToSearchFor+";");
         int Count=QueryToReturn.getInt("Count");
         return Count;
         }

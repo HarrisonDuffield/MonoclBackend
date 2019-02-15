@@ -56,7 +56,7 @@ public class MySQLBackend {
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
             System.out.println(SplitByWord);
             for (String Word : SplitByWord) {
-                if(!IsItemAlreadyPresent(Word)){
+                if(!IsItemAlreadyPresent(QuestionID,Word)){
                 System.out.println("Split Item : "+Word);
                 String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
                         + " VALUES (NULL, NULL,'"+Word+"', NULL, '0', NULL);";
@@ -73,7 +73,7 @@ public class MySQLBackend {
             }
             else{
                 System.out.println("Split Item : "+Word);
-                int CountToUse=1+GetCount(Word);
+                int CountToUse=1+GetCount(QuestionID,Word);
                 System.out.println("Count To Use : "+ CountToUse);
                 String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
                         + " VALUES (NULL, NULL,'"+Word+"', NULL, '"+CountToUse+"', NULL);";
