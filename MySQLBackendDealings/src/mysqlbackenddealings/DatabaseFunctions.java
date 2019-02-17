@@ -43,13 +43,14 @@ public class DatabaseFunctions {
         QueryToReturn.beforeFirst();
         
         while(QueryToReturn.next()){
-            System.out.println("test"+QueryToReturn.getString("Count"));
+            System.out.println("test qtr "+QueryToReturn.getString("Count"));
         }
         QueryToReturn.last();
         count =QueryToReturn.getRow();
         System.out.println("Query to Return print ");            
         System.out.println("Item already present count "+count);
         if(count>0){
+            
             return count;
         }
         else{
