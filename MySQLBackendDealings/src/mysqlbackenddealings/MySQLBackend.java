@@ -79,7 +79,7 @@ public class MySQLBackend {
                 System.out.println("Split Item : "+Word);
                 int CountToUse=1+GetCount(QuestionID,Word);
                 System.out.println("Count To Use : "+ CountToUse);
-                String QueryToSend = "UPDATE `"+QuestionID+"` SET `Count`="+CountToUse+"WHERE `MainWord` = '"+Word+"';";
+                String QueryToSend = "UPDATE `"+QuestionID+"` SET `Count`="+CountToUse+" WHERE `MainWord` = '"+Word+"';";
                 System.out.println(QueryToSend);  
                 if(InsertData(QuestionID,QueryToSend)){
                     System.out.println("Query was succesful");
