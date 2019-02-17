@@ -32,43 +32,42 @@ public class DatabaseFunctions {
             
         }
     }
-    public static boolean IsItemAlreadyPresent(String QuestionID,String WordToSearchFor){
+    public static int GetCount(String QuestionID,String WordToSearchFor){
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
-        String Query ="SELECT 'Count' FROM`"+QuestionID+"`WHERE MainWord ='"+WordToSearchFor+"';";
-        System.out.println("Query :"+Query);
+        String Query ="SELECT * FROM`"+QuestionID+"`WHERE MainWord ='"+WordToSearchFor+"';";
+        System.out.println("Query ITem already presnet :"+Query);
         ResultSet QueryToReturn = statement.executeQuery(Query);
         int count=0;
+        QueryToReturn.beforeFirst();
+        
+        while(QueryToReturn.next()){
+            System.out.println("test"+QueryToReturn.getString("Count"));
+        }
         QueryToReturn.last();
         count =QueryToReturn.getRow();
-        System.out.println("Query to Return print "+ QueryToReturn.getString("Count"));            
-        
-        System.out.println("Item already present count"+count);
-        if(count>1){
-            return true;
+        System.out.println("Query to Return print ");            
+        System.out.println("Item already present count "+count);
+        if(count>0){
+            return count;
         }
         else{
-            return false;
+            return count;
         }
         }
         catch(Exception IsItemAlreadyPresentError){
             IsItemAlreadyPresentError.printStackTrace();
-            return true;
+            return 0;
         }
     }
-    public static int GetCount(String QuestionID , String WordToSearchFor){
-        try{
-        Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
-        Statement statement = ConnectionFunction.createStatement();
-        ResultSet QueryToReturn = statement.executeQuery("SELECT 'Count' FROM"+QuestionID+"WHERE `MainWord` ='"+WordToSearchFor+"';");
-        int Count=QueryToReturn.getInt("Count");
-        return Count;
-        }
-        catch(Exception GetCountFailure){
-                GetCountFailure.printStackTrace();
-                return 0;
-        }
+    public static boolean IsItemAlreadyPresent(String QuestionID , String WordToSearchFor){
+       if(GetCount(QuestionID,WordToSearchFor)>0){
+           return true;
+       }
+       else{
+           return false;
+       }
     }
     
     public static ResultSet SearchQueryReturn(String Query){

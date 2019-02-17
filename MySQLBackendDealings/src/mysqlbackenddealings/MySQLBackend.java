@@ -53,10 +53,11 @@ public class MySQLBackend {
            
         }
         for(int i=0;i<AnswerArray.size();i++){
+            System.out.println("Attempt : "+i);
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
             System.out.println("57"+SplitByWord);
             for (String Word : SplitByWord) {
-                if(!IsItemAlreadyPresent(QuestionID,Word)){
+                if(IsItemAlreadyPresent(QuestionID,Word)==false){
                 System.out.println("Item already present");
                 System.out.println("Split Item : "+Word);
                 String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
@@ -65,9 +66,10 @@ public class MySQLBackend {
                 System.out.println(QueryToSend);
                 if(InsertData(QuestionID,QueryToSend)){
                     System.out.println("Query was succesful");
-                    return true;
+                    
                 }
                 else{
+                    
                     System.err.println("Query Unsuccsesful");
                     return false;
                 }
@@ -83,7 +85,7 @@ public class MySQLBackend {
                 System.out.println(QueryToSend);  
                 if(InsertData(QuestionID,QueryToSend)){
                     System.out.println("Query was succesful");
-                    return true;
+                    
                 }
                 else{
                     System.err.println("Query Unsuccsesful");
@@ -92,14 +94,13 @@ public class MySQLBackend {
             }
         }
     }
+        return true;
     }
     catch(Exception TablePresent){
         TablePresent.printStackTrace();   
-        return false;
-        }
         System.err.println("Error line 90");
         return false;
-                
+    }           
     
         
     
