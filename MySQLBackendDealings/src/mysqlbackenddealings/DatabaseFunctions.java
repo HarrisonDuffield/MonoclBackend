@@ -37,13 +37,13 @@ public class DatabaseFunctions {
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
         String Query ="SELECT * FROM`"+QuestionID+"`WHERE MainWord ='"+WordToSearchFor+"';";
-        System.out.println("Query ITem already presnet :"+Query);
+        System.out.println("Query Item already presnet : "+Query);
         ResultSet QueryToReturn = statement.executeQuery(Query);
         int count=0;
         QueryToReturn.beforeFirst();
         
         while(QueryToReturn.next()){
-            System.out.println("test qtr "+QueryToReturn.getString("Count"));
+            System.out.println("Count "+QueryToReturn.getString("Count"));
         }
         QueryToReturn.last();
         count =QueryToReturn.getRow();

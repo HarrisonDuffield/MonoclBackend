@@ -15,7 +15,7 @@ public class MySQLBackend {
         ResultSet QuestionIDResults = SearchQueryReturn("SELECT DISTINCT QuestionID FROM answertable");
         int counter =1;
         while(QuestionIDResults.next()){            
-            System.out.println("QuestionID:"+QuestionIDResults.getString(counter));
+            System.out.println("\n\nQuestionID:"+QuestionIDResults.getString(counter));
             //statements to gather the results;
             String QuestionIDString = QuestionIDResults.getString(counter);
             ResultSet AnswerReturnResults = SearchQueryReturn("SELECT AnswerText FROM answertable WHERE QuestionID ="+QuestionIDString);
@@ -53,7 +53,7 @@ public class MySQLBackend {
            
         }
         for(int i=0;i<AnswerArray.size();i++){
-            System.out.println("Attempt : "+i);
+            System.out.println("\n Answer Being Worked On : "+i);
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
             System.out.println("57"+SplitByWord);
             for (String Word : SplitByWord) {
