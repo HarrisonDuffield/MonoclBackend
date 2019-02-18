@@ -35,10 +35,13 @@ public class DatabaseFunctions {
     public static int GetCount(String QuestionID,String WordToSearchFor){
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
-        Statement statement = ConnectionFunction.createStatement();
-        String Query ="SELECT * FROM`"+QuestionID+"`WHERE MainWord ='"+WordToSearchFor+"';";
-        System.out.println("Query Item already presnet : "+Query);
-        ResultSet QueryToReturn = statement.executeQuery(Query);
+        //Statement statement = ConnectionFunction.createStatement();
+        String Query ="SELECT * FROM `"+QuestionID+"` WHERE MainWord =? ;";
+        PreparedStatement Statement = ConnectionFunction.prepareStatement(Query);
+        
+        Statement.setString(1,WordToSearchFor);
+        //System.out.println("Query Item already presnet : "+Query);
+        ResultSet QueryToReturn = Statement.executeQuery();
         int count=0;
         QueryToReturn.beforeFirst();
         
@@ -119,7 +122,7 @@ public class DatabaseFunctions {
             return false;
         }
     }
-    public static boolean InsertData(String QuestionID,String Query){
+    public static boolean InsertDataDeprecated(String QuestionID,String Query){
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         Statement statement = ConnectionFunction.createStatement();
@@ -132,5 +135,34 @@ public class DatabaseFunctions {
             return false;
         }
     }
+    public static boolean InsertData(String QuestionID,String Word){
+        try{
+        Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
+        PreparedStatement Statement = ConnectionFunction.prepareStatement("INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
+                        + " VALUES (NULL, NULL,?, NULL, '1', NULL);"); 
+        System.out.println(Word);
+        Statement.setString(1,Word);
+        Statement.executeUpdate();
+        return true;
+        }
+        catch(Exception InsertDataFailure){
+            InsertDataFailure.printStackTrace();
+            return false;
+        }
+    }
+    public static boolean UpdateData(String QuestionID,String Word,int CountToUse){
+        try{
+             Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
+             PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE `"+QuestionID+"` SET `Count`="+CountToUse+" WHERE `MainWord` = ? ;");
+             Statement.setString(1,Word);
+             Statement.executeUpdate();
+             return true;
+        }
+        catch(Exception UpdateDataFailure){
+            UpdateDataFailure.printStackTrace();
+            return false;
+        
+        }
     
+}
 }

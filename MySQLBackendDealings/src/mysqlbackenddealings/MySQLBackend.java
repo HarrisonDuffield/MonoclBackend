@@ -60,11 +60,11 @@ public class MySQLBackend {
                 if(IsItemAlreadyPresent(QuestionID,Word)==false){
                 System.out.println("Item already present");
                 System.out.println("Split Item : "+Word);
-                String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
-                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '1', NULL);";
-                
-                System.out.println(QueryToSend);
-                if(InsertData(QuestionID,QueryToSend)){
+//                String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
+//                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '1', NULL);";
+//                
+//                System.out.println(QueryToSend);
+                if(InsertData(QuestionID,Word)){
                     System.out.println("Query was succesful");
                     
                 }
@@ -81,7 +81,7 @@ public class MySQLBackend {
                 System.out.println("Count To Use : "+ CountToUse);
                 String QueryToSend = "UPDATE `"+QuestionID+"` SET `Count`="+CountToUse+" WHERE `MainWord` = '"+Word+"';";
                 System.out.println(QueryToSend);  
-                if(InsertData(QuestionID,QueryToSend)){
+                if(UpdateData(QuestionID,Word,CountToUse)){
                     System.out.println("Query was succesful");
                     
                 }
