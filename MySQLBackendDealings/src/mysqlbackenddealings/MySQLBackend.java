@@ -34,7 +34,8 @@ public class MySQLBackend {
             if(WordSplitTablePopulator(QuestionIDString,AnswerArrayList) == true){
                 System.out.println(Blue+"\n Now on word handling"+RESET);
                 ProceedingAndFollwingWordHandler(QuestionIDString,AnswerArrayList);
-                System.out.println("Word Handler Complete "+RESET);
+                System.out.println("Word Handler Complete \n \n "+RESET);
+                PercentageSetting(QuestionIDString,AnswerArrayList.size());
                 
             }
             else{
@@ -70,34 +71,21 @@ public class MySQLBackend {
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
             //System.out.println("57"+SplitByWord);
             for (String Word : SplitByWord) {
-                if(IsItemAlreadyPresent(QuestionID,Word)==false){
-                //System.out.println("Item already present");
+                if(IsItemAlreadyPresent(QuestionID,Word)==false){                
                 System.out.println("Split Item : "+Word);
-//                String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
-//                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '1', NULL);";
-//                
-//                System.out.println(QueryToSend);
-                if(InsertData(QuestionID,Word)){
-                    //System.out.println("Query was succesful");
-                    
+                if(InsertData(QuestionID,Word)){                                       
                 }
-                else{
-                    
+                else{                    
                     System.err.println("Query Unsuccsesful");
                     return false;
                 }
             }
             else{
-                //System.out.println("Else selected");
-                //System.out.println("Split Item : "+Word);
                 int CountToUse=1+GetCount(QuestionID,Word);
-                //System.out.println("Count To Use : "+ CountToUse);
-                String QueryToSend = "UPDATE `"+QuestionID+"` SET `Count`="+CountToUse+" WHERE `MainWord` = '"+Word+"';";
-                //System.out.println(QueryToSend);  
-                if(UpdateData(QuestionID,Word,CountToUse)){
-                   // System.out.println("Query was succesful");
-                    
-                    
+                int PercentageToUse= 100*CountToUse/AnswerArray.size();
+                String QueryToSend = "UPDATE `"+QuestionID+"` SET `Count`="+CountToUse+"WHERE `MainWord` = '"+Word+"';";                
+                if(UpdateData(QuestionID,Word,CountToUse)){                 
+                                       
                 }
                 else{
                     System.err.println("Query Unsuccsesful");
@@ -113,8 +101,7 @@ public class MySQLBackend {
        // System.err.println("Error line 90");
         return false;
     }           
-    
-        
+           
     
     }
     public static void ProceedingAndFollwingWordHandler(String QuestionID, ArrayList<String> AnswerArrayList) {
@@ -147,11 +134,9 @@ public class MySQLBackend {
             String[] TempString=AnswerArrayOriginal.get(i).split("\\s");            
             if(TempString.length>1){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
                 int count =0;
-                for(int j=1;j<TempString.length;j++){
-                    System.out.println("x "+j+" Word "+WordToCheck );
+                for(int j=1;j<TempString.length;j++){                   
                     if(TempString[j].contentEquals(WordToCheck)){
-                        System.out.println("It gone gud");
-                        System.out.println(TempString[j-1]);
+                        System.out.println( "Item To Add " +TempString[j-1]);
                         ArrayOfProceedingWords.add(TempString[j-1]);
                     }
                     else{
@@ -169,7 +154,7 @@ public class MySQLBackend {
     return FrequencyFinder(ArrayOfProceedingWords);
     }
     else{
-        return "Single Word Pre";
+        return "NULL";
     }
     }
     private static String FollowingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
@@ -180,9 +165,8 @@ public class MySQLBackend {
             if(TempString.length>1){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
                 int count =0;
                 for(int j=0;j<TempString.length -1;j++){
-                    System.out.println("x "+j+" Word "+WordToCheck );
                     if(TempString[j].contentEquals(WordToCheck)&& j!=TempString.length){
-                        System.out.println(TempString[j+1]);
+                        System.out.println("Item To Add " + TempString[j+1]);
                         ArrayOfFollowingWords.add(TempString[j+1]);
                     }
                     else{
@@ -200,7 +184,7 @@ public class MySQLBackend {
     return FrequencyFinder(ArrayOfFollowingWords);
     }
     else{
-        return "Single Word Foll";
+        return "NULL";
     }
     }
     private static String FrequencyFinder(ArrayList<String> SourceArray){
@@ -230,31 +214,12 @@ public class MySQLBackend {
                 
         }
         }
-        //System.out.println(MostCommonWord + "MostCom");
         return MostCommonWord;
         }
         else{
             return "NULL";
         }
-        //sorting begins - self created algorithm,not too efficent but doesnt really matter;
-//        int MostCommonCount =0;
-//        int EfficentNumberToStopAt = MaxNumberAwarded * 0.75;
-//        for(int i=0;i<UniqueItemArray.size();i++){
-//            if(UniqueItemArray.get(i).getCount()>=MostCommonCount){
-//                MostCommonWord = UniqueItemArray.get(i).getWord();
-//                MostCommonCount = UniqueItemArray.get(i).getCount();
-//                if(MostCommonCount >= EfficentNumberToStopAt){
-//                   break; 
-//                }
-//                else{
-//                    //nothing changes
-//                }
-//            }
-//            else{
-//                //item is not more frequent - next item
-//            }          
-//        }
-//    
+       
     
 }
 }

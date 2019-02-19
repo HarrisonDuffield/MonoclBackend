@@ -192,5 +192,23 @@ public class DatabaseFunctions {
            return false;
        }
     }
+    public static void PercentageSetting(String QuestionID,int maxsize){
+        try{
+            Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
+            ResultSet RetrievalOfCountsQuery = SearchQueryReturnSecondaryTable("SELECT COUNT FROM `"+QuestionID+"`;");
+            PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE `"+QuestionID+"` SET `Percentage` = ? WHERE Count =?;");
+            while(RetrievalOfCountsQuery.next()){
+                int Percentage = 100* RetrievalOfCountsQuery.getInt("Count")/maxsize;
+                System.out.println("Pushing Percentage of :"+Percentage);
+                Statement.setInt(1,Percentage);
+                Statement.setInt(2,RetrievalOfCountsQuery.getInt("Count"));
+                Statement.executeUpdate();
+            }
+            
+        }
+        catch(Exception PercentageFail){
+            PercentageFail.printStackTrace();
+        }
+    }
 }
 
