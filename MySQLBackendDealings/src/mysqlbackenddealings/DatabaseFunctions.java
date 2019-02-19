@@ -87,6 +87,18 @@ public class DatabaseFunctions {
             return null;
         }
     }
+    public static ResultSet SearchQueryReturnSecondaryTable(String Query){
+        try{
+        Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
+        Statement statement = ConnectionFunction.createStatement();
+        ResultSet QueryToReturn = statement.executeQuery(Query);
+        return QueryToReturn;
+        }
+        catch(Exception FalseSQLQueryResults){
+            FalseSQLQueryResults.printStackTrace();
+            return null;
+        }
+    }
     public static Boolean ClearTable(String QuestionID){
         try{
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
@@ -165,4 +177,20 @@ public class DatabaseFunctions {
         }
     
 }
+    public static boolean PreviousFollowingWordPush(String PreviousWord,String MainWord,String FollowingWord,String QuestionID){
+       try{
+             Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
+             PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE `"+QuestionID+"` SET `PreviousWord`= ? `FollowingWord` = ?   WHERE `MainWord` = ? ;");
+             Statement.setString(1,PreviousWord);
+             Statement.setString(2,FollowingWord);
+             Statement.setString(3,MainWord);
+             Statement.executeUpdate();
+             return true;
+        }
+       catch(Exception PrevFollPushFail){
+           PrevFollPushFail.printStackTrace();
+           return false;
+       }
+    }
 }
+

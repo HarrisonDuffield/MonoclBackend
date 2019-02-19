@@ -3,6 +3,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import static mysqlbackenddealings.DatabaseFunctions.*;
 public class MySQLBackend {
+    public static String Green = "\033[0;32m";
+    public static String Red = "\033[0;31m";
+    public static  String RESET = "\033[0m";
     public static void main(String[] args) {
         /**order of operation:
         Connects to DB
@@ -15,7 +18,7 @@ public class MySQLBackend {
         ResultSet QuestionIDResults = SearchQueryReturn("SELECT DISTINCT QuestionID FROM answertable");
         int counter =1;
         while(QuestionIDResults.next()){            
-            System.out.println("\n\nQuestionID:"+QuestionIDResults.getString(counter));
+            System.out.println(Green+"\n\nQuestionID:"+QuestionIDResults.getString(counter)+RESET);
             //statements to gather the results;
             String QuestionIDString = QuestionIDResults.getString(counter);
             ResultSet AnswerReturnResults = SearchQueryReturn("SELECT AnswerText FROM answertable WHERE QuestionID ="+QuestionIDString);
@@ -25,12 +28,15 @@ public class MySQLBackend {
             }
             //funcction to prepare the output file with the string to output;
             if(WordSplitTablePopulator(QuestionIDString,AnswerArrayList) == true){
-                ProceedingWordPopulator(QuestionIDString,AnswerArrayList);
+                ProceedingAndFollwingWordHandler(QuestionIDString,AnswerArrayList);
             }
             else{
                 System.err.println("False");
+                break;
             }
+            
         }
+        
         }             
         catch(Exception FalseSQLQueryResults){
             FalseSQLQueryResults.printStackTrace();
@@ -53,7 +59,7 @@ public class MySQLBackend {
            
         }
         for(int i=0;i<AnswerArray.size();i++){
-            System.out.println("\n Answer Being Worked On : "+i);
+            System.out.println(Red+"\n Answer Being Worked On : "+i+RESET);
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
             System.out.println("57"+SplitByWord);
             for (String Word : SplitByWord) {
@@ -84,6 +90,7 @@ public class MySQLBackend {
                 if(UpdateData(QuestionID,Word,CountToUse)){
                     System.out.println("Query was succesful");
                     
+                    
                 }
                 else{
                     System.err.println("Query Unsuccsesful");
@@ -102,14 +109,107 @@ public class MySQLBackend {
     
         
     
-}
-    public static boolean ProceedingWordPopulator(String QuestionID,ArrayList<String> AnswerArray){
-        return false;
     }
-    public static boolean FollowingWordPopulator(ArrayList<String> AnswerArray){
-        return false;
+    public static void ProceedingAndFollwingWordHandler(String QuestionID, ArrayList<String> AnswerArrayList) {
+        try{
+        ArrayList AnswerArray = AnswerArrayList;//data gathering and organistaion dealt with in one method to be more efficent as they will both build off this 
+        ArrayList<String> ArrayOfMainWords = new ArrayList();
+        ResultSet CurrentItems = SearchQueryReturnSecondaryTable("SELECT * FROM `"+QuestionID+"`;");
+        while(CurrentItems.next()){
+            ArrayOfMainWords.add(CurrentItems.getString("MainWord"));
+            }
+        
+        for(int i=0;i<ArrayOfMainWords.size();i++){
+            //System.out.println(ArrayOfMainWords.get(i));
+            ProceedingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
+            String PreviousWordToPush =ProceedingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
+            String FollowingWordToPush = FollowingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
+            PreviousFollowingWordPush(PreviousWordToPush,ArrayOfMainWords.get(i),FollowingWordToPush,QuestionID);
+        }
+        }
+        catch(Exception ProFollHandlerFailure){
+            ProFollHandlerFailure.printStackTrace();
+        }
+    }
+        
+    private static String ProceedingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
+        ArrayList<String> ArrayOfProceedingWords = new ArrayList();
+        //for each item in the answer array,split the answer into before the word and the section inclkuding the word,then split the before section
+        //by the last space,should return as expected
+        //ArrayOfProceedingWords.retainmostcommonword
+        for(int i=0;i<AnswerArrayOriginal.size();i++){
+            if(AnswerArrayOriginal.get(i).contains(WordToCheck)){//check doen at the top to be more efficent ,so it doesnt check later after already havign doen things
+            String[] TempString=AnswerArrayOriginal.get(i).split(" ");
+            //int wordcount = TempString.length;
+            if(TempString.length>0){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
+                TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
+                //for(int x=0;x<=wordcount;x++){
+                String[] SecondTempStringArray = TempString[0].split(" ");
+                ArrayOfProceedingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
+                //}
+            }
+            else{//not so sure about the poitn of this else statment;
+                //return "null";
+            }
+            }
+            else{
+                System.out.println("Doesnt contain the WordToCheck, going to iterate again");
+            }
+        return "NULL";
+    }
+    //see most common item in the array;
+    for(int i=0;i<ArrayOfProceedingWords.size();i++){
+        System.out.println(ArrayOfProceedingWords.get(i));
+    }
+    return FrequencyFinder(ArrayOfProceedingWords);
+    }
+    private static String FollowingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
+        return "NULL";
                 
     }
+    private static String FrequencyFinder(ArrayList<String> SourceArray){
+        ArrayList<TableItem> UniqueItemArray = new ArrayList();//reu-using table item, doesn tmatter that im using the 
+        //main word isntead of previous as its only for orgnisation/storage
+        UniqueItemArray.add(new TableItem(SourceArray.get(0),1));
+        int MaxNumberAwarded=0;
+        String MostCommonWord = " ";
+        for(int i=1;i<SourceArray.size();i++){
+            for(int j=0;j<UniqueItemArray.size();j++){
+                if(UniqueItemArray.get(j).getWord()==SourceArray.get(i)){
+                    UniqueItemArray.get(j).CountIncreaser();//increase count by 1;
+                    if(UniqueItemArray.get(j).getCount()>MaxNumberAwarded){
+                        MaxNumberAwarded=UniqueItemArray.get(j).getCount();
+                        MostCommonWord = UniqueItemArray.get(j).getWord();
+                        
+                    }
+                else{
+                    UniqueItemArray.add(new TableItem(SourceArray.get(i),1));
+                }
+            }
+                
+        }
+        }
+        return MostCommonWord;
+        //sorting begins - self created algorithm,not too efficent but doesnt really matter;
+//        int MostCommonCount =0;
+//        int EfficentNumberToStopAt = MaxNumberAwarded * 0.75;
+//        for(int i=0;i<UniqueItemArray.size();i++){
+//            if(UniqueItemArray.get(i).getCount()>=MostCommonCount){
+//                MostCommonWord = UniqueItemArray.get(i).getWord();
+//                MostCommonCount = UniqueItemArray.get(i).getCount();
+//                if(MostCommonCount >= EfficentNumberToStopAt){
+//                   break; 
+//                }
+//                else{
+//                    //nothing changes
+//                }
+//            }
+//            else{
+//                //item is not more frequent - next item
+//            }          
+//        }
+//    
     
+}
 }
         
