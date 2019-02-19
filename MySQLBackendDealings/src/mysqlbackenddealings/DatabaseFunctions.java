@@ -180,7 +180,8 @@ public class DatabaseFunctions {
     public static boolean PreviousFollowingWordPush(String PreviousWord,String MainWord,String FollowingWord,String QuestionID){
        try{
              Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
-             PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE `"+QuestionID+"` SET `PreviousWord`= ? `FollowingWord` = ?   WHERE `MainWord` = ? ;");
+             PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE `"+QuestionID+"` SET `PreviousWord`= ?,FollowingWord = ?   WHERE MainWord = ?;");
+             System.out.println("Main Word "+MainWord);
              Statement.setString(1,PreviousWord);
              Statement.setString(2,FollowingWord);
              Statement.setString(3,MainWord);

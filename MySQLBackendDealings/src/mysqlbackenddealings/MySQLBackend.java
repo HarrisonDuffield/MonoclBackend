@@ -7,6 +7,7 @@ public class MySQLBackend {
     public static String Red = "\033[0;31m";
     public static String Yellow = "\033[0;33m";
     public static String Blue = "\033[0;34m";
+    public static String Purple = "\033[1;35m";
     public static  String RESET = "\033[0m";
     public static void main(String[] args) {
         /**order of operation:
@@ -33,6 +34,7 @@ public class MySQLBackend {
                 System.out.println(Blue+"\n Now on word handling"+RESET);
                 ProceedingAndFollwingWordHandler(QuestionIDString,AnswerArrayList);
                 System.out.println("Word Handler Complete "+RESET);
+                break;
             }
             else{
                 System.err.println("False");
@@ -145,22 +147,22 @@ public class MySQLBackend {
             if(AnswerArrayOriginal.get(i).contains(WordToCheck)){//check doen at the top to be more efficent ,so it doesnt check later after already havign doen things
             String[] TempString=AnswerArrayOriginal.get(i).split(" ");
             //int wordcount = TempString.length;
-            if(TempString.length>0){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
+            if(TempString.length>1){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
                 System.out.println(Yellow+"Length beofre: "+TempString.length);
                 System.out.println("Word to Check"+WordToCheck);
                 System.out.println("Temp String Before split" + TempString[0]);
                 TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
-                System.out.println(Yellow+"Length after: "+TempString.length);
+                System.out.println("Length after: "+TempString.length);
                 //for(int x=0;x<=wordcount;x++){
                 System.out.println(TempString[0]);
-               // String[] SecondTempStringArray = TempString[0].split(" ");
-                System.out.println(Yellow+"Length after 2: "+TempString.length);
-                System.out.println(Yellow+"Length after 2: "+TempString[0]);
+                String[] SecondTempStringArray = TempString[0].split(" ");
+                System.out.println("Length after 2: "+TempString.length);
+                System.out.println("Length after 2: "+TempString[0]+RESET);
                 ArrayOfProceedingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
                 //}
             }
             else{//not so sure about the poitn of this else statment;
-                //return "null";
+                return "OneWordAnswer";
             }
             }
             else{
@@ -175,7 +177,7 @@ public class MySQLBackend {
     return FrequencyFinder(ArrayOfProceedingWords);
     }
     private static String FollowingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
-        return "NULL";
+        return "ONEWORDEMPTY";
                 
     }
     private static String FrequencyFinder(ArrayList<String> SourceArray){
@@ -183,6 +185,9 @@ public class MySQLBackend {
         //main word isntead of previous as its only for orgnisation/storage
         UniqueItemArray.add(new TableItem(SourceArray.get(0),1));
         int MaxNumberAwarded=0;
+        for(int i=0;i<=SourceArray.size();i++){
+            System.out.println(Purple+SourceArray.get(i)+RESET);
+        }
         String MostCommonWord = " ";
         for(int i=1;i<SourceArray.size();i++){
             for(int j=0;j<UniqueItemArray.size();j++){
