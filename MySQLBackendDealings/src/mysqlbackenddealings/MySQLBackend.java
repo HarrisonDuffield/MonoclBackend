@@ -36,6 +36,7 @@ public class MySQLBackend {
                 ProceedingAndFollwingWordHandler(QuestionIDString,AnswerArrayList);
                 System.out.println("Word Handler Complete \n \n "+RESET);
                 PercentageSetting(QuestionIDString,AnswerArrayList.size());
+                SignificanceValueSet(QuestionIDString);
                 
             }
             else{

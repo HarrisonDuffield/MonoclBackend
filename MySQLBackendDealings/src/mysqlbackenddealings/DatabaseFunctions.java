@@ -210,5 +210,26 @@ public class DatabaseFunctions {
             PercentageFail.printStackTrace();
         }
     }
+    public static void SignificanceValueSet(String QuestionID){
+         try{
+            Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocation,UserName,Password);
+            ResultSet RetrievalOfCountsQuery = SearchQueryReturnSecondaryTable("SELECT Percentage FROM `"+QuestionID+"`;");
+            int CountSoFar =0;
+            int iteration=0;
+            while(RetrievalOfCountsQuery.next()){
+                CountSoFar=CountSoFar + RetrievalOfCountsQuery.getInt("Percentage");
+                iteration++;
+            }
+            int SignificantValue = (CountSoFar/iteration);
+            PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE `questiontable` SET `SignificantValue` = ? WHERE `QuestionID` = ?;");
+            Statement.setInt(1,SignificantValue);
+            Statement.setString(2,QuestionID);
+            Statement.executeUpdate();
+            
+         }
+         catch(Exception SignifValFail){
+             SignifValFail.printStackTrace();
+         }
+}
 }
 
