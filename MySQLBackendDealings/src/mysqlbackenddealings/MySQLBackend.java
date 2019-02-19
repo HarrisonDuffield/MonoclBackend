@@ -185,7 +185,7 @@ public class MySQLBackend {
         //main word isntead of previous as its only for orgnisation/storage
         UniqueItemArray.add(new TableItem(SourceArray.get(0),1));
         int MaxNumberAwarded=0;
-        for(int i=0;i<=SourceArray.size();i++){
+        for(int i=0;i<SourceArray.size();i++){
             System.out.println(Purple+SourceArray.get(i)+RESET);
         }
         String MostCommonWord = " ";
