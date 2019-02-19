@@ -67,17 +67,17 @@ public class MySQLBackend {
         for(int i=0;i<AnswerArray.size();i++){
             System.out.println(Red+"\n Answer Being Worked On : "+i+RESET);
             String[] SplitByWord=AnswerArray.get(i).split(" "); 
-            System.out.println("57"+SplitByWord);
+            //System.out.println("57"+SplitByWord);
             for (String Word : SplitByWord) {
                 if(IsItemAlreadyPresent(QuestionID,Word)==false){
-                System.out.println("Item already present");
+                //System.out.println("Item already present");
                 System.out.println("Split Item : "+Word);
 //                String QueryToSend ="INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
 //                        + " VALUES (NULL, NULL,'"+Word+"', NULL, '1', NULL);";
 //                
 //                System.out.println(QueryToSend);
                 if(InsertData(QuestionID,Word)){
-                    System.out.println("Query was succesful");
+                    //System.out.println("Query was succesful");
                     
                 }
                 else{
@@ -87,14 +87,14 @@ public class MySQLBackend {
                 }
             }
             else{
-                System.out.println("Else selected");
-                System.out.println("Split Item : "+Word);
+                //System.out.println("Else selected");
+                //System.out.println("Split Item : "+Word);
                 int CountToUse=1+GetCount(QuestionID,Word);
-                System.out.println("Count To Use : "+ CountToUse);
+                //System.out.println("Count To Use : "+ CountToUse);
                 String QueryToSend = "UPDATE `"+QuestionID+"` SET `Count`="+CountToUse+" WHERE `MainWord` = '"+Word+"';";
-                System.out.println(QueryToSend);  
+                //System.out.println(QueryToSend);  
                 if(UpdateData(QuestionID,Word,CountToUse)){
-                    System.out.println("Query was succesful");
+                   // System.out.println("Query was succesful");
                     
                     
                 }
@@ -109,7 +109,7 @@ public class MySQLBackend {
     }
     catch(Exception TablePresent){
         TablePresent.printStackTrace();   
-        System.err.println("Error line 90");
+       // System.err.println("Error line 90");
         return false;
     }           
     
@@ -127,7 +127,7 @@ public class MySQLBackend {
         
         for(int i=0;i<ArrayOfMainWords.size();i++){
             //System.out.println(ArrayOfMainWords.get(i));
-            ProceedingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
+            
             String PreviousWordToPush =ProceedingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
             String FollowingWordToPush = FollowingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
             PreviousFollowingWordPush(PreviousWordToPush,ArrayOfMainWords.get(i),FollowingWordToPush,QuestionID);
@@ -139,26 +139,95 @@ public class MySQLBackend {
     }
         
     private static String ProceedingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
+        System.out.println("Method clale");
         ArrayList<String> ArrayOfProceedingWords = new ArrayList();
         //for each item in the answer array,split the answer into before the word and the section inclkuding the word,then split the before section
         //by the last space,should return as expected
         //ArrayOfProceedingWords.retainmostcommonword
         for(int i=0;i<AnswerArrayOriginal.size();i++){
+            if(AnswerArrayOriginal.contains(WordToCheck)){//check doen at the top to be more efficent ,so it doesnt check later after already havign doen things
+            String[] TempString=AnswerArrayOriginal.get(i).split("\\P{L}+");
+            //int wordcount = TempString.length;
+            System.out.println("Length" + TempString.length);
+            if(TempString.length>1){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
+                System.out.println("ABVOE");
+                for(int x =0;x<TempString.length;x++){
+                    System.out.println(TempString[x]);
+                    if(TempString[x]==WordToCheck){
+                        ArrayOfProceedingWords.add(TempString[x-1]);
+                    }
+                    else{
+                        //next
+                    }
+                }//                
+//                
+//                
+//                System.out.println(Yellow+"Length beofre: "+TempString.length);
+//                System.out.println("Word to Check"+WordToCheck);
+//                System.out.println("Temp String Before split" + TempString[0]);
+//                TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
+//                System.out.println("Length after: "+TempString.length);
+//                //for(int x=0;x<=wordcount;x++){
+//                System.out.println(TempString[0]);
+//                String[] SecondTempStringArray = TempString[0].split(" ");
+//                System.out.println("Length after 2: "+TempString.length);
+//                System.out.println("Length after 2: "+TempString[0]+RESET);
+//                ArrayOfProceedingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
+//                //}
+            }
+            else{//not so sure about the poitn of this else statment;
+                System.out.println("TRIGGERED");
+                //return "OneWordAnswer";
+            }
+            }
+            else{
+                return "error Answers dont contain asnwers";
+               // System.out.println("Doesnt contain the WordToCheck, going to iterate again");
+            }
+        
+    }
+    //see most common item in the array;
+    for(int i=0;i<ArrayOfProceedingWords.size();i++){
+        System.out.println(Blue+ArrayOfProceedingWords.get(i));
+    }
+    if(ArrayOfProceedingWords.size()>0){
+    return FrequencyFinder(ArrayOfProceedingWords);
+    }
+    else{
+        return "Single Word Pre";
+    }
+    }
+    private static String FollowingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
+        System.out.println("now doing folow");
+        ArrayList<String> ArrayOfFollowingWords = new ArrayList();
+        //for each item in the answer array,split the answer into before the word and the section inclkuding the word,then split the before section
+        //by the last space,should return as expected
+        //ArrayOfProceedingWords.retainmostcommonword
+        for(int i=0;i<AnswerArrayOriginal.size();i++){
             if(AnswerArrayOriginal.get(i).contains(WordToCheck)){//check doen at the top to be more efficent ,so it doesnt check later after already havign doen things
-            String[] TempString=AnswerArrayOriginal.get(i).split(" ");
+            String[] TempString=AnswerArrayOriginal.get(i).split("\\P{L}+");
             //int wordcount = TempString.length;
             if(TempString.length>1){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
-                System.out.println(Yellow+"Length beofre: "+TempString.length);
-                System.out.println("Word to Check"+WordToCheck);
-                System.out.println("Temp String Before split" + TempString[0]);
-                TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
-                System.out.println("Length after: "+TempString.length);
-                //for(int x=0;x<=wordcount;x++){
-                System.out.println(TempString[0]);
-                String[] SecondTempStringArray = TempString[0].split(" ");
-                System.out.println("Length after 2: "+TempString.length);
-                System.out.println("Length after 2: "+TempString[0]+RESET);
-                ArrayOfProceedingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
+                for(int x =0;x<TempString.length;x++){
+                    System.out.println(Red+TempString[x]);
+                    if(TempString[x]==WordToCheck){
+                        ArrayOfFollowingWords.add(TempString[x+1]);
+                    }
+                    else{
+                        //next
+                    }
+                }
+//                System.out.println(Yellow+"Length beofre: "+TempString.length);
+//                System.out.println("Word to Check"+WordToCheck);
+//                System.out.println("Temp String Before split" + TempString[0]);
+//                TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
+//                System.out.println("Length after: "+TempString.length);
+//                //for(int x=0;x<=wordcount;x++){
+//                System.out.println(TempString[0]);
+//                String[] SecondTempStringArray = TempString[1].split(" ");
+//                System.out.println("Length after 2: "+TempString.length);
+//                System.out.println("Length after 3: "+TempString[1]+RESET);
+//                ArrayOfFollowingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
                 //}
             }
             else{//not so sure about the poitn of this else statment;
@@ -166,21 +235,20 @@ public class MySQLBackend {
             }
             }
             else{
-                System.out.println("Doesnt contain the WordToCheck, going to iterate again");
+                //System.out.println("Doesnt contain the WordToCheck, going to iterate again");
             }
         
     }
     //see most common item in the array;
-    for(int i=0;i<ArrayOfProceedingWords.size();i++){
-        System.out.println(ArrayOfProceedingWords.get(i));
+    for(int i=0;i<ArrayOfFollowingWords.size();i++){
+        System.out.println(ArrayOfFollowingWords.get(i));
     }
-    return FrequencyFinder(ArrayOfProceedingWords);
-    }
-    private static String FollowingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
-        return "ONEWORDEMPTY";
+    return FrequencyFinder(ArrayOfFollowingWords);
                 
     }
     private static String FrequencyFinder(ArrayList<String> SourceArray){
+        if(SourceArray.size()>0){
+        System.out.println("Source Array Size "+ SourceArray.size() + SourceArray.get(0));
         ArrayList<TableItem> UniqueItemArray = new ArrayList();//reu-using table item, doesn tmatter that im using the 
         //main word isntead of previous as its only for orgnisation/storage
         UniqueItemArray.add(new TableItem(SourceArray.get(0),1));
@@ -206,6 +274,10 @@ public class MySQLBackend {
         }
         }
         return MostCommonWord;
+        }
+        else{
+            return "NULL";
+        }
         //sorting begins - self created algorithm,not too efficent but doesnt really matter;
 //        int MostCommonCount =0;
 //        int EfficentNumberToStopAt = MaxNumberAwarded * 0.75;

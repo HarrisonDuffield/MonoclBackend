@@ -46,13 +46,13 @@ public class DatabaseFunctions {
         QueryToReturn.beforeFirst();
         
         while(QueryToReturn.next()){
-            System.out.println("Count test 55 "+QueryToReturn.getString("Count"));
+            //System.out.println("Count test 55 "+QueryToReturn.getString("Count"));
             count = Integer.parseInt(QueryToReturn.getString("Count"));
             
         }
         
-        System.out.println("Query to Return print ");            
-        System.out.println("Item already present count "+count);
+       // System.out.println("Query to Return print ");            
+        //System.out.println("Item already present count "+count);
         if(count>0){
             
             return count;
@@ -105,7 +105,7 @@ public class DatabaseFunctions {
         Statement statement = ConnectionFunction.createStatement();
         statement.execute("DROP TABLE `"+QuestionID+"`;");
         if(CreateTable(QuestionID)){
-            System.out.println("Table recreated");
+            
         };
         return true;
     }
@@ -152,7 +152,7 @@ public class DatabaseFunctions {
         Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
         PreparedStatement Statement = ConnectionFunction.prepareStatement("INSERT INTO `"+QuestionID+"` (`AnswerWordId`, `PreviousWord`, `MainWord`, `FollowingWord`, `Count`, `Percentage`)"
                         + " VALUES (NULL, NULL,?, NULL, '1', NULL);"); 
-        System.out.println(Word);
+        
         Statement.setString(1,Word);
         Statement.executeUpdate();
         return true;
@@ -181,7 +181,6 @@ public class DatabaseFunctions {
        try{
              Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocationSecondaryTable,UserName,Password);
              PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE `"+QuestionID+"` SET `PreviousWord`= ?,FollowingWord = ?   WHERE MainWord = ?;");
-             System.out.println("Main Word "+MainWord);
              Statement.setString(1,PreviousWord);
              Statement.setString(2,FollowingWord);
              Statement.setString(3,MainWord);
