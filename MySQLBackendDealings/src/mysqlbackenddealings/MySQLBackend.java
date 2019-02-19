@@ -8,6 +8,7 @@ public class MySQLBackend {
     public static String Yellow = "\033[0;33m";
     public static String Blue = "\033[0;34m";
     public static String Purple = "\033[1;35m";
+    public static String Cyan = "\033[1;36m";
     public static  String RESET = "\033[0m";
     public static void main(String[] args) {
         /**order of operation:
@@ -34,11 +35,11 @@ public class MySQLBackend {
                 System.out.println(Blue+"\n Now on word handling"+RESET);
                 ProceedingAndFollwingWordHandler(QuestionIDString,AnswerArrayList);
                 System.out.println("Word Handler Complete "+RESET);
-                break;
+                
             }
             else{
                 System.err.println("False");
-                break;
+                
             }
             
         }
@@ -127,8 +128,9 @@ public class MySQLBackend {
         
         for(int i=0;i<ArrayOfMainWords.size();i++){
             //System.out.println(ArrayOfMainWords.get(i));
-            
+            System.out.println("Item:"+ArrayOfMainWords.get(i));
             String PreviousWordToPush =ProceedingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
+            System.out.println("Word To Push "+ PreviousWordToPush);
             String FollowingWordToPush = FollowingWordPopulator(AnswerArrayList,ArrayOfMainWords.get(i));
             PreviousFollowingWordPush(PreviousWordToPush,ArrayOfMainWords.get(i),FollowingWordToPush,QuestionID);
         }
@@ -138,57 +140,30 @@ public class MySQLBackend {
         }
     }
         
-    private static String ProceedingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
-        System.out.println("Method clale");
-        ArrayList<String> ArrayOfProceedingWords = new ArrayList();
-        //for each item in the answer array,split the answer into before the word and the section inclkuding the word,then split the before section
-        //by the last space,should return as expected
-        //ArrayOfProceedingWords.retainmostcommonword
-        for(int i=0;i<AnswerArrayOriginal.size();i++){
-            if(AnswerArrayOriginal.contains(WordToCheck)){//check doen at the top to be more efficent ,so it doesnt check later after already havign doen things
-            String[] TempString=AnswerArrayOriginal.get(i).split("\\P{L}+");
-            //int wordcount = TempString.length;
-            System.out.println("Length" + TempString.length);
+    private static String ProceedingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){        
+        ArrayList<String> ArrayOfProceedingWords = new ArrayList();      
+        for(int i=0;i<AnswerArrayOriginal.size();i++){            
+            if(AnswerArrayOriginal.get(i).contains(WordToCheck)){//check doen at the top to be more efficent ,so it doesnt check later after already havign doen things
+            String[] TempString=AnswerArrayOriginal.get(i).split("\\s");            
             if(TempString.length>1){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
-                System.out.println("ABVOE");
-                for(int x =0;x<TempString.length;x++){
-                    System.out.println(TempString[x]);
-                    if(TempString[x]==WordToCheck){
-                        ArrayOfProceedingWords.add(TempString[x-1]);
+                int count =0;
+                for(int j=1;j<TempString.length;j++){
+                    System.out.println("x "+j+" Word "+WordToCheck );
+                    if(TempString[j].contentEquals(WordToCheck)){
+                        System.out.println("It gone gud");
+                        System.out.println(TempString[j-1]);
+                        ArrayOfProceedingWords.add(TempString[j-1]);
                     }
                     else{
-                        //next
-                    }
-                }//                
-//                
-//                
-//                System.out.println(Yellow+"Length beofre: "+TempString.length);
-//                System.out.println("Word to Check"+WordToCheck);
-//                System.out.println("Temp String Before split" + TempString[0]);
-//                TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
-//                System.out.println("Length after: "+TempString.length);
-//                //for(int x=0;x<=wordcount;x++){
-//                System.out.println(TempString[0]);
-//                String[] SecondTempStringArray = TempString[0].split(" ");
-//                System.out.println("Length after 2: "+TempString.length);
-//                System.out.println("Length after 2: "+TempString[0]+RESET);
-//                ArrayOfProceedingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
-//                //}
-            }
-            else{//not so sure about the poitn of this else statment;
-                System.out.println("TRIGGERED");
-                //return "OneWordAnswer";
+                       }
+                }//
+                
             }
             }
             else{
-                return "error Answers dont contain asnwers";
+                //return "error Answers dont contain asnwers";
                // System.out.println("Doesnt contain the WordToCheck, going to iterate again");
-            }
-        
-    }
-    //see most common item in the array;
-    for(int i=0;i<ArrayOfProceedingWords.size();i++){
-        System.out.println(Blue+ArrayOfProceedingWords.get(i));
+            }   
     }
     if(ArrayOfProceedingWords.size()>0){
     return FrequencyFinder(ArrayOfProceedingWords);
@@ -198,53 +173,35 @@ public class MySQLBackend {
     }
     }
     private static String FollowingWordPopulator(ArrayList<String> AnswerArrayOriginal,String WordToCheck){
-        System.out.println("now doing folow");
-        ArrayList<String> ArrayOfFollowingWords = new ArrayList();
-        //for each item in the answer array,split the answer into before the word and the section inclkuding the word,then split the before section
-        //by the last space,should return as expected
-        //ArrayOfProceedingWords.retainmostcommonword
-        for(int i=0;i<AnswerArrayOriginal.size();i++){
+       ArrayList<String> ArrayOfFollowingWords = new ArrayList();      
+        for(int i=0;i<AnswerArrayOriginal.size();i++){            
             if(AnswerArrayOriginal.get(i).contains(WordToCheck)){//check doen at the top to be more efficent ,so it doesnt check later after already havign doen things
-            String[] TempString=AnswerArrayOriginal.get(i).split("\\P{L}+");
-            //int wordcount = TempString.length;
+            String[] TempString=AnswerArrayOriginal.get(i).split("\\s");            
             if(TempString.length>1){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
-                for(int x =0;x<TempString.length;x++){
-                    System.out.println(Red+TempString[x]);
-                    if(TempString[x]==WordToCheck){
-                        ArrayOfFollowingWords.add(TempString[x+1]);
+                int count =0;
+                for(int j=0;j<TempString.length -1;j++){
+                    System.out.println("x "+j+" Word "+WordToCheck );
+                    if(TempString[j].contentEquals(WordToCheck)&& j!=TempString.length){
+                        System.out.println(TempString[j+1]);
+                        ArrayOfFollowingWords.add(TempString[j+1]);
                     }
                     else{
-                        //next
-                    }
-                }
-//                System.out.println(Yellow+"Length beofre: "+TempString.length);
-//                System.out.println("Word to Check"+WordToCheck);
-//                System.out.println("Temp String Before split" + TempString[0]);
-//                TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
-//                System.out.println("Length after: "+TempString.length);
-//                //for(int x=0;x<=wordcount;x++){
-//                System.out.println(TempString[0]);
-//                String[] SecondTempStringArray = TempString[1].split(" ");
-//                System.out.println("Length after 2: "+TempString.length);
-//                System.out.println("Length after 3: "+TempString[1]+RESET);
-//                ArrayOfFollowingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
-                //}
-            }
-            else{//not so sure about the poitn of this else statment;
-                return "OneWordAnswer";
+                       }
+                }//
+                
             }
             }
             else{
-                //System.out.println("Doesnt contain the WordToCheck, going to iterate again");
-            }
-        
+                //return "error Answers dont contain asnwers";
+               // System.out.println("Doesnt contain the WordToCheck, going to iterate again");
+            }   
     }
-    //see most common item in the array;
-    for(int i=0;i<ArrayOfFollowingWords.size();i++){
-        System.out.println(ArrayOfFollowingWords.get(i));
-    }
+    if(ArrayOfFollowingWords.size()>0){
     return FrequencyFinder(ArrayOfFollowingWords);
-                
+    }
+    else{
+        return "Single Word Foll";
+    }
     }
     private static String FrequencyFinder(ArrayList<String> SourceArray){
         if(SourceArray.size()>0){
@@ -257,7 +214,7 @@ public class MySQLBackend {
             System.out.println(Purple+SourceArray.get(i)+RESET);
         }
         String MostCommonWord = " ";
-        for(int i=1;i<SourceArray.size();i++){
+        for(int i=0;i<SourceArray.size();i++){
             for(int j=0;j<UniqueItemArray.size();j++){
                 if(UniqueItemArray.get(j).getWord()==SourceArray.get(i)){
                     UniqueItemArray.get(j).CountIncreaser();//increase count by 1;
@@ -273,6 +230,7 @@ public class MySQLBackend {
                 
         }
         }
+        //System.out.println(MostCommonWord + "MostCom");
         return MostCommonWord;
         }
         else{
