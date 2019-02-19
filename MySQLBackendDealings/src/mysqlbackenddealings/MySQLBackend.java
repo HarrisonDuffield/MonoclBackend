@@ -5,6 +5,8 @@ import static mysqlbackenddealings.DatabaseFunctions.*;
 public class MySQLBackend {
     public static String Green = "\033[0;32m";
     public static String Red = "\033[0;31m";
+    public static String Yellow = "\033[0;33m";
+    public static String Blue = "\033[0;34m";
     public static  String RESET = "\033[0m";
     public static void main(String[] args) {
         /**order of operation:
@@ -28,7 +30,9 @@ public class MySQLBackend {
             }
             //funcction to prepare the output file with the string to output;
             if(WordSplitTablePopulator(QuestionIDString,AnswerArrayList) == true){
+                System.out.println(Blue+"\n Now on word handling"+RESET);
                 ProceedingAndFollwingWordHandler(QuestionIDString,AnswerArrayList);
+                System.out.println("Word Handler Complete "+RESET);
             }
             else{
                 System.err.println("False");
@@ -142,9 +146,16 @@ public class MySQLBackend {
             String[] TempString=AnswerArrayOriginal.get(i).split(" ");
             //int wordcount = TempString.length;
             if(TempString.length>0){//should check to see if its more than 1 word , not too sure if this is going to be an off by 1 problem
+                System.out.println(Yellow+"Length beofre: "+TempString.length);
+                System.out.println("Word to Check"+WordToCheck);
+                System.out.println("Temp String Before split" + TempString[0]);
                 TempString=AnswerArrayOriginal.get(i).split(WordToCheck);
+                System.out.println(Yellow+"Length after: "+TempString.length);
                 //for(int x=0;x<=wordcount;x++){
-                String[] SecondTempStringArray = TempString[0].split(" ");
+                System.out.println(TempString[0]);
+               // String[] SecondTempStringArray = TempString[0].split(" ");
+                System.out.println(Yellow+"Length after 2: "+TempString.length);
+                System.out.println(Yellow+"Length after 2: "+TempString[0]);
                 ArrayOfProceedingWords.add(SecondTempStringArray[(SecondTempStringArray.length-1)]);
                 //}
             }
@@ -155,7 +166,7 @@ public class MySQLBackend {
             else{
                 System.out.println("Doesnt contain the WordToCheck, going to iterate again");
             }
-        return "NULL";
+        
     }
     //see most common item in the array;
     for(int i=0;i<ArrayOfProceedingWords.size();i++){
