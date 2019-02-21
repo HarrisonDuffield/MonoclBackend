@@ -27,7 +27,7 @@ public class PrefferedWordTestBed {
             Word=ItemsInTable.getString("MainWord");
             
         }
-        System.out.println(PreviousRecursiveStringCreator(Word,QuestionID));
+        System.out.println(IterativeStringCreator(Word,QuestionID));
              
         }
     catch(Exception OrganisationFail){
@@ -45,15 +45,64 @@ public class PrefferedWordTestBed {
              PreviousStringNew=ItemsInTable.getString("PreviousWord");
         }
         System.out.println(PreviousStringNew);
-        if(PreviousStringNew !="NULL"){
+        while(PreviousStringNew !="NULL"){
             PreviousString=PreviousStringNew;
             PreviousRecursiveStringCreator(PreviousString,QuestionID);
         }
-        return "Word : "+Word+"Previous : "+PreviousString;
+        
+        return PreviousString;
         }
         catch(Exception RecurStringFail){
         RecurStringFail.printStackTrace();
         return "NULL Error";
         }
-    }   
+    }
+    public static String IterativeStringCreator(String MainWord,String QuestionID){
+        try{
+            String BaseString = MainWord;
+            ArrayList OutputString = new ArrayList();
+            while(MainWord!="NULL"){                 
+                 String Query = "SELECT PreviousWord FROM `"+QuestionID+"` WHERE MainWord = '"+MainWord+"' LIMIT 1;";
+                 System.out.println(MainWord);
+                 ResultSet ItemsInTable = SearchQueryReturnSecondaryTable(Query);
+                 while(ItemsInTable.next()){
+                     MainWord=ItemsInTable.getString("PreviousWord");
+                 }
+                     if(MainWord!="NULL"){
+                         OutputString.add(MainWord);
+                     }
+                     else{
+                         break;
+                        
+                     }
+                 }
+                
+            
+            Collections.reverse(OutputString);
+            OutputString.add(BaseString);
+            while(MainWord!="NULL"){                           
+                 String Query = "SELECT FollowingWord FROM `"+QuestionID+"` WHERE MainWord = '"+MainWord+"';";
+                 System.out.println(Query);
+                 ResultSet ItemsInTable = SearchQueryReturnSecondaryTable(Query);
+                 while(ItemsInTable.next()){
+                     MainWord=ItemsInTable.getString("FollowingWord");
+                 }
+                     if(MainWord!="NULL"){
+                         OutputString.add(MainWord);
+                     }
+                     else{
+                         
+                       break; 
+                     }
+                 }
+                
+            
+        return OutputString.toString();
+        }
+        catch(Exception IterativeStringCreatorPrevFail){
+            IterativeStringCreatorPrevFail.printStackTrace();
+            return null;
+        }
+            
+}
 }
