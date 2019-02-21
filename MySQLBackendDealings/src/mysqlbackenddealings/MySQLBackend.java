@@ -39,12 +39,12 @@ public class MySQLBackend {
                 PercentageSetting(QuestionIDString,AnswerArrayList.size());
                 SignificanceValueSet(QuestionIDString);
                 Organisation(QuestionIDString);
-                break;
+                
                 
             }
             else{
                 System.err.println("False");
-                break;
+                
                 
             }
             
