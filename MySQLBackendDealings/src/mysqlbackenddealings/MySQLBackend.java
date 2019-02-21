@@ -2,6 +2,7 @@ package mysqlbackenddealings;
 import java.sql.*;
 import java.util.ArrayList;
 import static mysqlbackenddealings.DatabaseFunctions.*;
+import static mysqlbackenddealings.PrefferedWordTestBed.Organisation;
 public class MySQLBackend {
     public static String Green = "\033[0;32m";
     public static String Red = "\033[0;31m";
@@ -37,10 +38,13 @@ public class MySQLBackend {
                 System.out.println("Word Handler Complete \n \n "+RESET);
                 PercentageSetting(QuestionIDString,AnswerArrayList.size());
                 SignificanceValueSet(QuestionIDString);
+                Organisation(QuestionIDString);
+                break;
                 
             }
             else{
                 System.err.println("False");
+                break;
                 
             }
             

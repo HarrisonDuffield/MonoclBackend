@@ -3,13 +3,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Sort {
-    public static ArrayList QuickSorting(ArrayList<Integer> List,int Low,int High){
+    public static ArrayList QuickSort(ArrayList<Integer> List,int Low,int High){
         int OriginalLow=0;
         int OriginalHigh=List.size()-1;
         int LeftPointer=Low;
         int RightPointer=High;
         System.out.println("Recursive Call");
         if(List.size()<2){
+            System.out.println("Less than 2");
             return List;
         }
         else{
@@ -41,10 +42,10 @@ public class Sort {
                  RightPointer--;
                 }
                 if(Low<RightPointer){
-                    QuickSorting(List,Low,RightPointer);
+                    QuickSort(List,Low,RightPointer);
                 }
                 if(LeftPointer<High){
-                    QuickSorting(List,LeftPointer,High);
+                    QuickSort(List,LeftPointer,High);
                 }
                     
                 }
