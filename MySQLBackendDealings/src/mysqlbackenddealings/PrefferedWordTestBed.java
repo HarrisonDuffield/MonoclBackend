@@ -27,7 +27,8 @@ public class PrefferedWordTestBed {
             Word=ItemsInTable.getString("MainWord");
             }        
         String IterativeStringTestReturn =IterativeStringCreator(Word,QuestionID);
-        System.out.println("Test"+IterativeStringTestReturn);
+        SignificantStringPush(QuestionID,IterativeStringTestReturn);
+        
        // while(!"NULL".equals(IterativeStringTestReturn)){
        //     System.out.println("T R I G G E R E D");
         //    IterativeStringTestReturn=IterativeStringTest(IterativeStringTestReturn,QuestionID);

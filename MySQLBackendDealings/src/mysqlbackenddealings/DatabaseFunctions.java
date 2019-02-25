@@ -232,5 +232,19 @@ public class DatabaseFunctions {
              SignifValFail.printStackTrace();
          }
 }
+    public static void SignificantStringPush(String QuestionID,String StringToPush){
+        try{
+            System.out.println("String To Push - Preffered Answer "+StringToPush);
+            Connection ConnectionFunction = DriverManager.getConnection(ConnectionLocation,UserName,Password);
+            PreparedStatement Statement = ConnectionFunction.prepareStatement("UPDATE`questiontable` SET `PreferredAnswer` = ? WHERE `QuestionID` = ?;");
+            Statement.setString(1,StringToPush);
+            Statement.setString(2,QuestionID);
+            Statement.executeUpdate();
+            
+        }
+        catch(Exception SignifStrPushFail){
+            SignifStrPushFail.printStackTrace();
+        }
+    }
 }
 
