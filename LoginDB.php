@@ -9,7 +9,7 @@ $ConnectionFunction = mysqli_connect($servername, $account, $password, $dbname);
 $validation = array();
 $UserName = "";
 $Password = "";
-Require("..\MoncolBackend\EmailVerification.php");
+Require("..\MonoclBackend\EmailVerification.php");
 
 if(isset($_POST['LoginButtonGreen'])){
 $UserName = mysqli_real_escape_string($ConnectionFunction,$_POST['UserName']);
@@ -28,8 +28,8 @@ else{
 $PasswordHashRetreivalQuery="SELECT PasswordHash FROM userprivatedetails WHERE(UserID)= '$UserID' LIMIT 1";
 $PasswordHashRetreival=mysqli_query($ConnectionFunction,$PasswordHashRetreivalQuery);
 
-$EmailVerificationRetreivalQuery ="SELECT AccountVerified FROM userdetails WHERE(UserName) = '$UserName' LIMIT1";
-$EmailVerificationRetreival=mysqli_query($ConnectionFunction,$EmailVerificationRetreivalQuery);
+$EmailVerificationRetreivalQuery ="SELECT AccountVerified FROM userdetails WHERE(UserID) = '$UserID' LIMIT 1";
+$EmailVerificationRetreival=mysqli_query($ConnectionFunction,$EmailVerificationRetreivalQuery) or die(mysqli_error($ConnectionFunction));
 array_push($validation,"Tehcni");
 foreach($PasswordHashRetreival as $row){            
         if (password_verify($Password,$row['PasswordHash'])){
@@ -41,6 +41,7 @@ foreach($PasswordHashRetreival as $row){
                     echo "Email Verified";
                     echo "Log In Approved";
                     $_SESSION["UserLoggedIn"] = $UserID;
+                    header("Location :MainPage.php");
                     
                 }
                 else{

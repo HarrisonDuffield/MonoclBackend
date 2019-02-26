@@ -128,7 +128,7 @@
            echo "<Table>";
            echo "<tr>";
            echo "<th> Topic </th>";
-           AnsweredPercentageRetrieval(41);
+           AnsweredPercentageRetrieval($_SESSION["UserLoggedIn"]);
            echo "<th> Answer Percentage</th>";
            echo "</tr>";
            global $TopicDisplayArray,$AnswerPercentageArray;
