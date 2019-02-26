@@ -132,6 +132,7 @@
                $TotalPercentages=$TotalPercentages + $AnswerPercentageArray[$i];
            }
            $TotalToReturn = 100*($TotalPercentages / $AmountOf100s);
+           $TotalToReturn =round($TotalToReturn);
            echo "<b>$TotalToReturn %</b>";
            
        }
