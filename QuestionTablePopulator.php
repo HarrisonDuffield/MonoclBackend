@@ -129,9 +129,10 @@
            $AmountOf100s =100*(count($AnswerPercentageArray));
            $TotalPercentages = 0;
            for ($i=0;$i<(count($AnswerPercentageArray));$i++){
-               $TotalPercentages=$TotalPercentages + $AnswerPercentageArray[i];
+               $TotalPercentages=$TotalPercentages + $AnswerPercentageArray[$i];
            }
            $TotalToReturn = 100*($TotalPercentages / $AmountOf100s);
+           echo "<b>$TotalToReturn %</b>";
            
        }
        function TopicTableOrganisation(){
