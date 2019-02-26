@@ -4,6 +4,7 @@
        $AnswerPercentageArray = array();
        $AnswerListArray = array();
        $Language = array();
+       $PercentageForCircle = 0;
        session_start();
        $servername = "localhost:3306";
        $account = "PHPConnection2";
@@ -121,6 +122,17 @@
            //order of operation topics gathered , questions in each topic gathered,
            // for each question see if the user has answered, answered/total questions = percentage for each topic
        }
+       
+       }
+       function BigCiclePercentageCalc(){
+           global $AnswerPercentageArray;
+           $AmountOf100s =100*(count($AnswerPercentageArray));
+           $TotalPercentages = 0;
+           for ($i=0;$i<(count($AnswerPercentageArray));$i++){
+               $TotalPercentages=$TotalPercentages + $AnswerPercentageArray[i];
+           }
+           $TotalToReturn = 100*($TotalPercentages / $AmountOf100s);
+           
        }
        function TopicTableOrganisation(){
            global $Language;
