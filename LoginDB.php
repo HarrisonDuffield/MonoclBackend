@@ -41,7 +41,7 @@ foreach($PasswordHashRetreival as $row){
                     echo "Email Verified";
                     echo "Log In Approved";
                     $_SESSION["UserLoggedIn"] = $UserID;
-                    header("Location :MainPage.php");
+                    header("Location: MainPage.php");
                     
                 }
                 else{
