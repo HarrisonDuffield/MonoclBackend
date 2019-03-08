@@ -24,7 +24,7 @@ function  LeaderBoardDisplayClass($test){
     }
     $UserPointsQuery = "Select * from userdetails WHERE ClassID = $UserClassID";
     $UserPointsRetrieval = mysqli_query($ConnectionFunction,$UserPointsQuery) or die(mysqli_error($ConnectionFunction));
-    echo "<table>";
+    //echo "<table>";
     echo "<tr>";
     echo "<th>";
     echo "User";
@@ -32,7 +32,7 @@ function  LeaderBoardDisplayClass($test){
     echo "<th>";
     echo "Points";
     echo "<th>";
-    echo "<tr>";
+    echo "</tr>";
     foreach($UserPointsRetrieval as $UserExport){
         echo "<tr>";
         $item = $UserExport['UserName'];
@@ -41,7 +41,7 @@ function  LeaderBoardDisplayClass($test){
         echo "<td> $UserPoints</td>";
         echo"</tr>";
     }
-    echo "<table>";
+    //echo "</table>";
 }
 else{
     echo"What went wrong here then?";
