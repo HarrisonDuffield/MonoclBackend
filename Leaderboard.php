@@ -12,9 +12,9 @@ function LeaderBoardDisplayTotal(){
     $ConnectionFunction =ConnectionReturn();
     $QuestionListQuery = "Select UserPoints from userdetails ";
 }
-function  LeaderBoardDisplayClass(){
+function  LeaderBoardDisplayClass($test){
     $ConnectionFunction =ConnectionReturn();
-    $test=$_SESSION["UserLoggedIn"];
+    //$test=$_SESSION["UserLoggedIn"];
     $UserClassRetirevalQuery = "Select ClassID from userdetails WHERE UserID = $test";
     $UserClassRetirevalExecution = mysqli_query($ConnectionFunction,$UserClassRetirevalQuery) or die(mysqli_error($ConnectionFunction));
     $UserClassID = "404";
