@@ -10,7 +10,7 @@ $validation = array();
 $UserName = "";
 $Password = "";
 Require("..\MonoclBackend\EmailVerification.php");
-
+$_SESSION["Language"] = "FR";
 if(isset($_POST['LoginButtonGreen'])){
 $UserName = mysqli_real_escape_string($ConnectionFunction,$_POST['UserName']);
 $Password = mysqli_real_escape_string($ConnectionFunction,$_POST["Password"]);
