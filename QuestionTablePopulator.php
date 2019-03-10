@@ -125,6 +125,9 @@
        
        }
        function BigCiclePercentageCalc(){
+           global $Language;
+           $Language[0] = $_SESSION["Language"];
+           AnsweredPercentageRetrieval($_SESSION["UserLoggedIn"]);
            global $AnswerPercentageArray;
            $AmountOf100s =100*(count($AnswerPercentageArray));
            $TotalPercentages = 0;
@@ -138,8 +141,7 @@
        }
        function TopicTableOrganisation(){
            global $Language;
-           $Language[0] ="FR";
-           
+           $Language[0] = $_SESSION["Language"];
            echo "<tr>";
            echo "<th> Topic </th>";
            AnsweredPercentageRetrieval($_SESSION["UserLoggedIn"]);
