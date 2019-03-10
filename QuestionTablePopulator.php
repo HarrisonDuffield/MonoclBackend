@@ -139,7 +139,9 @@
        function TopicTableOrganisation(){
            global $Language;
            $Language[0] ="FR";
-           echo "<Table>";
+           $TableId="TopicTable";
+           
+           echo "<table id=$TableId>";
            echo "<tr>";
            echo "<th> Topic </th>";
            AnsweredPercentageRetrieval($_SESSION["UserLoggedIn"]);
