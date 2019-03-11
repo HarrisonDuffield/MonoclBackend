@@ -1,6 +1,8 @@
  <?php
        $TopicDisplayArray = array();
+       $AnsweredOrNotArray = array();
        $QuestionDisplayArray = array();
+       $SelectiveQuestionDisplayArray=array();
        $AnswerPercentageArray = array();
        $AnswerListArray = array();
        $Language = array();
@@ -11,8 +13,97 @@
        $dbname = "monoclmain";
        $password="PHPPassword12";
        $ConnectionFunction = mysqli_connect($servername, $account, $password, $dbname);
-       function QuestionDisplayFunction($TopicClickedOn,$Language){
+       function QuestionTableExport($TopicClickedOn){           
+        global $Language,$SelectiveQuestionDisplayArray,$AnsweredOrNotArray;
+        $Language[0] = $_SESSION["Language"];
+            SelectiveQuestionDisplayFunction($TopicClickedOn,$Language[0]);
+            CompleteOrIncompleteReturn($_SESSION["UserLoggedIn"],$SelectiveQuestionDisplayArray);
+           echo"<tr>";           
+           echo "<th> Question Id</th>";
+            echo "<th> Complete</th>";
+           echo"</tr>";
+            for($i=0;$i<count($SelectiveQuestionDisplayArray);$i++){
+            $itemtopush = $SelectiveQuestionDisplayArray[$i];
+            $ticktopush = $AnsweredOrNotArray[$i];
+            echo "<tr>";
+            echo "<td>";
+            echo $itemtopush;
+            echo"</td>";
+            echo"<td>";
+            echo $ticktopush;
+            echo "</td>";
+            echo"</tr>";
+           }               
            
+       }
+       function CompleteOrIncompleteReturn($UserID,$ArrayOfQuestionIDs){
+           global $ConnectionFunction,$AnsweredOrNotArray;
+           for($i=0;$i<count($ArrayOfQuestionIDs);$i++){
+               $ItemToSearchFor =$ArrayOfQuestionIDs[$i];
+               $AnswerSubmittedQuery="SELECT * From AnswerTable WHERE UserID ='$UserID' AND QuestionID = '$ItemToSearchFor'";
+               $CompleteOrNotExecution = mysqli_query($ConnectionFunction,$AnswerSubmittedQuery);
+               if($CompleteOrNotExecution){
+                   $CountOfResults = mysqli_num_rows($CompleteOrNotExecution);
+                   
+                   if($CountOfResults > 0){
+                       array_push($AnsweredOrNotArray,"✓");
+                   }
+                   else{
+                       array_push($AnsweredOrNotArray,"x");
+                   }
+                }
+               else{
+                   array_push($AnsweredOrNotArray,"x");
+               }
+           }
+        }
+
+       
+       function SelectiveQuestionDisplayFunction($TopicClickedOn,$Language){
+           $TopicClickedOn = ltrim($TopicClickedOn," ");//whitespace seems to mean it reutns an empty set
+           $TopicClickedOn = rtrim($TopicClickedOn," ");
+               
+        $QuestionListQuery = "Select QuestionID from questiontable where Topic ='$TopicClickedOn'AND Language = '$Language' ";
+        global $ConnectionFunction;
+        $QuestionListExecution = mysqli_query($ConnectionFunction,$QuestionListQuery);
+        if($QuestionListExecution){
+            $counter=0;
+            foreach($QuestionListExecution as $row){
+                global $SelectiveQuestionDisplayArray;
+                if(in_array($row['QuestionID'],$SelectiveQuestionDisplayArray)){
+                                          
+                }
+                else{
+                    array_push($SelectiveQuestionDisplayArray,$row['QuestionID']);
+                    $counter=$counter+1;
+                }
+            }
+            return $counter;
+        }
+        else{
+            
+            echo mysqli_error($ConnectionFunction);
+    }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       function QuestionDisplayFunction($TopicClickedOn,$Language){
+        
            $QuestionListQuery = "Select QuestionID from questiontable where Topic = '$TopicClickedOn' AND Language = '$Language' ";
            global $ConnectionFunction;
            $QuestionListExecution = mysqli_query($ConnectionFunction,$QuestionListQuery);
@@ -84,7 +175,7 @@
            $DenominatorOfTotalQuestionsInTopic = 0;
            global $TopicDisplayArray,$QuestionDisplayArray,$AnswerListArray; 
            for($r=0;$r<count($AnswerListArray);$r++){
-               echo $AnswerListArray[$r];
+              // echo $AnswerListArray[$r];
            }
            
            for($i =0;$i<count($TopicDisplayArray);$i++){
@@ -150,7 +241,7 @@
            global $TopicDisplayArray,$AnswerPercentageArray;
            for($e=0;$e<(count($TopicDisplayArray));$e++){
                echo "<tr>";
-               echo "   <td> $TopicDisplayArray[$e] </td>";
+               echo "   <td > $TopicDisplayArray[$e] </td>";
                echo "   <td> $AnswerPercentageArray[$e]%</td>";
                echo "</tr>";               
            }
