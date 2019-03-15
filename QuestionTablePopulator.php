@@ -13,6 +13,21 @@
        $dbname = "monoclmain";
        $password="PHPPassword12";
        $ConnectionFunction = mysqli_connect($servername, $account, $password, $dbname);
+       function ClearQuestionArray(){
+           
+           global $QuestionDisplayArray;
+           echo count($QuestionDisplayArray);
+           foreach($QuestionDisplayArray as $item){
+               unset($QuestionDisplayArray[$item]);
+           } 
+           echo count($QuestionDisplayArray);
+       }
+       function ClearAnswerArray(){
+           global $AnswerListArray;
+           foreach($AnswerListArray as $item){
+               unset($AnswerListArray[$item]);
+           }
+       }
        function QuestionTableExport($TopicClickedOn){           
         global $Language,$SelectiveQuestionDisplayArray,$AnsweredOrNotArray;
         $Language[0] = $_SESSION["Language"];
@@ -33,8 +48,7 @@
             echo $ticktopush;
             echo "</td>";
             echo"</tr>";
-           }               
-           
+           }                          
        }
        function CompleteOrIncompleteReturn($UserID,$ArrayOfQuestionIDs){
            global $ConnectionFunction,$AnsweredOrNotArray;
@@ -103,6 +117,7 @@
 
 
        function QuestionDisplayFunction($TopicClickedOn,$Language){
+         // echo 88;
         
            $QuestionListQuery = "Select QuestionID from questiontable where Topic = '$TopicClickedOn' AND Language = '$Language' ";
            global $ConnectionFunction;
@@ -111,7 +126,7 @@
                foreach($QuestionListExecution as $row){
                    global $QuestionDisplayArray;
                    if(in_array($row['QuestionID'],$QuestionDisplayArray)){
-                                             
+                                             //suspect the issue lies with this funciton
                    }
                    else{
                        array_push($QuestionDisplayArray,$row['QuestionID']);
@@ -147,18 +162,24 @@
        }
        function AnswerListRetreival($UserIDToUse,$QuestionID){
            global $ConnectionFunction;
+           //echo 77;
            $AnswerListQuery = "SELECT * FROM answertable WHERE QuestionID = '$QuestionID' AND UserID = '$UserIDToUse'";
            $AnswerListExecution =mysqli_query($ConnectionFunction,$AnswerListQuery);
-           
+           if($QuestionID == 2){
+               echo "i give up";
+           }
            if($AnswerListExecution){
                foreach($AnswerListExecution as $row){
                    global $AnswerListArray;
-                   if(in_array($row['AnswerID'],$AnswerListArray)){
+                   $itemtopush=$row['AnswerID'];
+                   //echo $itemtopush;
+                  // echo $itemtopush;
+                   if(in_array($itemtopush,$AnswerListArray)){
                        
                        
                    }
                    else{
-                       array_push($AnswerListArray,$row['AnswerID']);
+                       array_push($AnswerListArray,$itemtopush);
                    }
                }
            }
@@ -174,41 +195,46 @@
            $NumeratorOfAnsweredQuestionsInTopic = 0;
            $DenominatorOfTotalQuestionsInTopic = 0;
            global $TopicDisplayArray,$QuestionDisplayArray,$AnswerListArray; 
-           for($r=0;$r<count($AnswerListArray);$r++){
-              // echo $AnswerListArray[$r];
-           }
            
            for($i =0;$i<count($TopicDisplayArray);$i++){
                $NumeratorOfAnsweredQuestionsInTopic = 0;
                $DenominatorOfTotalQuestionsInTopic = 0;
                global $Language;
                QuestionDisplayFunction($TopicDisplayArray[$i],$Language[0]);
-               for($x = 0;$x<count($QuestionDisplayArray);$x++){
+               //echo count($QuestionDisplayArray);
+               for($x = 0;$x<count($QuestionDisplayArray)-1;$x++){
+                     // echo $x;                  
+                   //echo $QuestionDisplayArray[$x];
                    AnswerListRetreival($UserIDToUse,$QuestionDisplayArray[$x]);
+                  // echo $AnswerListArray[0];
                    if(count($AnswerListArray)>=1){
                        $NumeratorOfAnsweredQuestionsInTopic++;
                        $DenominatorOfTotalQuestionsInTopic++;
-                       unset($AnswerListArray);
-                       $AnswerListArray = array();
+                    //   echo 999;
+                       //echo $NumeratorOfAnsweredQuestionsInTopic;
+                //echo 808;
+                  //   echo $DenominatorOfTotalQuestionsInTopic;
+                  ClearAnswerArray();
+                       
                    }
                    else{
                       $DenominatorOfTotalQuestionsInTopic++;
-                      unset($AnswerListArray);
-                      $AnswerListArray = array();
+                      ClearAnswerArray();
                    }
                                 
             }
-            unset($QuestionDisplayArray);
-            $QuestionDisplayArray = array();
+            ClearQuestionArray();
+            
             
             if($NumeratorOfAnsweredQuestionsInTopic>0){            
-            $PercentageToAdd = ($NumeratorOfAnsweredQuestionsInTopic/$DenominatorOfTotalQuestionsInTopic)*100;
+            $PercentageToAdd = ($NumeratorOfAnsweredQuestionsInTopic/$DenominatorOfTotalQuestionsInTopic);
+            $PercentageToAdd = $PercentageToAdd*100;
             
             }
             else{
                 $PercentageToAdd = 0;
             }
-            
+            //echo $PercentageToAdd;
             array_push($AnswerPercentageArray,$PercentageToAdd);
            //order of operation topics gathered , questions in each topic gathered,
            // for each question see if the user has answered, answered/total questions = percentage for each topic
