@@ -35,7 +35,7 @@ function IsAnswerPreferedText($AnswerGiven,$QuestionID){
         return true;
     }
     else{
-        return false;
+            return false;
     }
 }
 function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){

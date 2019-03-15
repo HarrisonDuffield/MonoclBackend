@@ -41,7 +41,22 @@ foreach($PasswordHashRetreival as $row){
                     echo "Email Verified";
                     echo "Log In Approved";
                     $_SESSION["UserLoggedIn"] = $UserID;
-                    header("Location: MainPage.php");
+                    $UserType="Student";
+                    $IsTeacherQuery = "SELECT Teacher FROM userdetails WHERE UserID = '$UserID'";
+                    foreach($IsTeacherQuery as $row){
+                        if($row["Teacher"]=="1"){
+                            $UserType="Teacher";
+                        }
+                        else{
+                            $UserType="Student";
+                        }
+                    }
+                    if($UserType=="Teacher"){
+                        header("Location: TeacherPage.html");
+                    }
+                    else{
+                        header("Location: MainPage.html");
+                    }
                     
                 }
                 else{
