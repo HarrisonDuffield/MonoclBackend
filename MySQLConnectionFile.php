@@ -11,7 +11,7 @@ $password="PHPPassword12";
 function ConnectionReturnSecondaryTable(){
     $servername = "localhost:3306";
     $account = "PHPConnection2";
-$dbname = "monoclquestionansers";
+$dbname = "monoclquestionanswers";
 $password="PHPPassword12";
 
     $ConnectionFunction = mysqli_connect($servername, $account, $password, $dbname);
