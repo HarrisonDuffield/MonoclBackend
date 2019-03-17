@@ -1,45 +1,48 @@
 <?php
-require(MonoclBackend\MySQLConnectionFile.php);
+require("MySQLConnectionFile.php");
 $ConnectionFunction=ConnectionReturn();
 //functiontosee if answer correct
-
-echo $AnswerGiven;
 
 function IsAnswerCorrect($AnswerGiven,$QuestionID){
 //checks if it is equal to the sacred string
 //checks if the signifanct value reached
-if(IsAnswerPreferedText($TextToCheck,$QuestionID)){
+if(IsAnswerPreferedText($AnswerGiven,$QuestionID)){
     PointsAward(100);
+    echo "true";
     return true;
 }
 else{
-    if(IsAnswerAboveSignifValue($AnswerGiven)){
+    //echo $AnswerGiven;
+    if(IsAnswerAboveSignifValue($AnswerGiven,$QuestionID)){
         PointsAward(50);
+        echo "true";
         return true;
     }
     else{
+        //echo "    false";
         return false;
     }
 
 }
 }
 function IsAnswerPreferedText($AnswerGiven,$QuestionID){
-    $PreferredTextQuery = "SELECT PreferredAnswer FROM questiontable WHERE QuestionID = $QuestionID";
-    $PreferredTextExecution = mysqli_query(ConnectionReturn(),$PreferredTextQuery);
-    if($PreferredTextExecution){
-        foreach($PreferredTextExecution as $row){
-            $itemtocheck = $row['PreferredAnswer'];
-        }
-    }
-    if($itemtocheck == $AnswerGiven){
-        return true;
-    }
-    else{
-            return false;
-    }
-}
-function addAnswer($CorrectOrNot){
     
+   // echo "called2";
+    $PreferredTextQuery = "SELECT * FROM questiontable WHERE QuestionID = $QuestionID AND PreferedAnswer = '$AnswerGiven' limit 1";
+    $PreferredTextExecution = mysqli_query(ConnectionReturn(),$PreferredTextQuery);
+    if(mysqli_num_rows($PreferredTextExecution)>=1){
+        echo "true";
+        return true;
+}
+else{
+    mysqli_error(ConnectionReturn());
+    echo  $PreferredTextQuery;
+    echo false;
+    return false;
+
+}}
+function addAnswer($CorrectOrNot){
+
 }
 function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){
     $ConnectionFunctionPrimary = ConnectionReturn();
@@ -47,6 +50,7 @@ function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){
     $SignificantValue =0;
     $CountSoFar=0;
     $SignificantValueExecution = mysqli_query($ConnectionFunctionPrimary,$RetrievalOfSignifValue);
+    if($SignificantValueExecution){
     foreach($SignificantValueExecution as $row){
         $SignificantValue = $row["SignifcantValue"];
     }
@@ -100,5 +104,9 @@ function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){
 }
 //points award method as common function in mysqlfile
 
+}
+else{
+    msyqli_error($ConnectionFunctionSecondary);
+}
 }
 ?>
