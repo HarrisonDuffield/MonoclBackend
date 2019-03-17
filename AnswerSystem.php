@@ -38,6 +38,9 @@ function IsAnswerPreferedText($AnswerGiven,$QuestionID){
             return false;
     }
 }
+function addAnswer($CorrectOrNot){
+    
+}
 function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){
     $ConnectionFunctionPrimary = ConnectionReturn();
     $RetrievalOfSignifValue = "SELECT SignificantValue FROM questiontable WHERE QuestionID = $QuestionID";
