@@ -16,17 +16,23 @@
        function ClearQuestionArray(){
            
            global $QuestionDisplayArray;
-           echo count($QuestionDisplayArray);
+           //echo count($QuestionDisplayArray);
            foreach($QuestionDisplayArray as $item){
                unset($QuestionDisplayArray[$item]);
            } 
-           echo count($QuestionDisplayArray);
+           //echo count($QuestionDisplayArray);
        }
        function ClearAnswerArray(){
            global $AnswerListArray;
            foreach($AnswerListArray as $item){
                unset($AnswerListArray[$item]);
            }
+       }
+       function ClearTopicArray(){
+           global $TopicDisplayArray;
+           foreach($TopicDisplayArray as $item){
+            unset($TopicDisplayArray[$item]);
+        }
        }
        function QuestionTableExport($TopicClickedOn){           
         global $Language,$SelectiveQuestionDisplayArray,$AnsweredOrNotArray;
@@ -139,12 +145,16 @@
        }
        }
        function TopicListRetreival(){
-       $TopicListQuery = "SELECT Topic FROM QuestionTable";
+           global $Language;
+        $LanguageToUse = $Language[0];
+       $TopicListQuery = "SELECT Topic FROM QuestionTable WHERE Language = '$LanguageToUse'";
+       
        global $ConnectionFunction;
        $TopicListExecution= mysqli_query($ConnectionFunction, $TopicListQuery);
        if($TopicListExecution){
            
            foreach($TopicListExecution as $row){
+               ClearTopicArray();
                global $TopicDisplayArray;
                 if(in_array($row['Topic'],$TopicDisplayArray)){
                    
@@ -251,9 +261,14 @@
            for ($i=0;$i<(count($AnswerPercentageArray));$i++){
                $TotalPercentages=$TotalPercentages + $AnswerPercentageArray[$i];
            }
+           if($AmountOf100s == 0 || $TotalPercentages ==0){
+            echo "<b> 0 %</b>";
+           }
+           else{
            $TotalToReturn = 100*($TotalPercentages / $AmountOf100s);
            $TotalToReturn =round($TotalToReturn);
            echo "<b>$TotalToReturn %</b>";
+           }
            
        }
        function TopicTableOrganisation(){

@@ -125,7 +125,7 @@ public class PrefferedWordTestBed {
                  }
                 
             
-        return OutputString.toString();
+        return String.join(" ",OutputString);
         }
         catch(Exception IterativeStringCreatorPrevFail){
             IterativeStringCreatorPrevFail.printStackTrace();
