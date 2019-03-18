@@ -3,23 +3,25 @@ require("MySQLConnectionFile.php");
 $ConnectionFunction=ConnectionReturn();
 //functiontosee if answer correct
 
-function IsAnswerCorrect($AnswerGiven,$QuestionID){
+function IsAnswerCorrect($AnswerGiven,$QuestionID,$UserID){
 //checks if it is equal to the sacred string
 //checks if the signifanct value reached
 if(IsAnswerPreferedText($AnswerGiven,$QuestionID)){
-    PointsAward(100);
-    echo "true";
+    PointsAward(100,$UserID);
+    AddAnswer($QuestionID,$AnswerGiven,$UserID,1);
+   //echo "Is Prefered Text - 100 awarded";
     return true;
 }
 else{
     //echo $AnswerGiven;
     if(IsAnswerAboveSignifValue($AnswerGiven,$QuestionID)){
         PointsAward(50);
-        echo "true";
+        AddAnswer($QuestionID,$AnswerGiven,$UserID,0);
+        //echo "Is Above Significant value - 50 awarded";
         return true;
     }
     else{
-        //echo "    false";
+        AddAnswer($QuestionID,$AnswerGiven,$UserID,0);
         return false;
     }
 
@@ -31,7 +33,7 @@ function IsAnswerPreferedText($AnswerGiven,$QuestionID){
     $PreferredTextQuery = "SELECT * FROM questiontable WHERE `QuestionID` = '$QuestionID' AND `PreferredAnswer` = '$AnswerGiven';";
     $PreferredTextExecution = mysqli_query(ConnectionReturn(),$PreferredTextQuery);
     $numrows = mysqli_num_rows($PreferredTextExecution);
-    echo $numrows;
+   // echo $numrows;
     if($numrows>=1){
         echo "true";
         return true;
@@ -43,7 +45,17 @@ else{
     return false;
 
 }}
-function addAnswer($CorrectOrNot){
+function addAnswer($QuestionID,$AnswerText,$UserID,$CorrectOrNot){
+    global $ConnectionFunction;
+    $AnswerToAddQuery = "INSERT INTO answertable (QuestionID,AnswerText,UserID,GeneralAvailibility,PointsStatus) VALUES ('$QuestionID','$AnswerText','$UserID',$CorrectOrNot,1)";
+    $AnswerAddExecution =mysqli_query($ConnectionFunction,$AnswerToAddQuery);
+    if($AnswerAddExecution){
+        
+    }
+    else{
+        
+        echo mysqli_error($ConnectionFunction);
+    }
 
 }
 function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){
