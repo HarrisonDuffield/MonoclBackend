@@ -28,9 +28,11 @@ else{
 function IsAnswerPreferedText($AnswerGiven,$QuestionID){
     
    // echo "called2";
-    $PreferredTextQuery = "SELECT * FROM questiontable WHERE QuestionID = $QuestionID AND PreferedAnswer = '$AnswerGiven' limit 1";
+    $PreferredTextQuery = "SELECT * FROM questiontable WHERE `QuestionID` = '$QuestionID' AND `PreferredAnswer` = '$AnswerGiven';";
     $PreferredTextExecution = mysqli_query(ConnectionReturn(),$PreferredTextQuery);
-    if(mysqli_num_rows($PreferredTextExecution)>=1){
+    $numrows = mysqli_num_rows($PreferredTextExecution);
+    echo $numrows;
+    if($numrows>=1){
         echo "true";
         return true;
 }
@@ -52,7 +54,7 @@ function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){
     $SignificantValueExecution = mysqli_query($ConnectionFunctionPrimary,$RetrievalOfSignifValue);
     if($SignificantValueExecution){
     foreach($SignificantValueExecution as $row){
-        $SignificantValue = $row["SignifcantValue"];
+        $SignificantValue = $row["SignificantValue"];
     }
     $ConnectionFunctionSecondary = ConnectionReturnSecondaryTable();
     $TextStringArray = preg_split("/[^A-Za-z0-9]/", $TextToCheck);
@@ -60,7 +62,7 @@ function IsAnswerAboveSignifValue($TextToCheck,$QuestionID){
     $SecondaryTableExecution = mysqli_query($ConnectionFunctionSecondary,$SecondaryTableQuery);
     if($SecondaryTableExecution){
         foreach($SecondaryTableExecution as $row){
-            $NumberAssinged = $row["Percentage"];
+            $NumberAssigned = $row["Percentage"];
             $itemselected = $row["MainWord"];
             if($NumberAssigned >= $SignificantValue){
                 if(in_array($itemselected,$TextStringArray)){
