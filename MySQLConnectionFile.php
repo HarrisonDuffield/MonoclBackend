@@ -20,7 +20,7 @@ $password="PHPPassword12";
 function PointsAward($AmountToAward,$UserID){
     $CurrentPoints =0;
     $PointRetrievalQuery = "SELECT UserPoints FROM userdetails WHERE UserID = $UserID";
-    $PointRetrievalExecution = mysqli_query(ConnectionReturn(),$PointsRetrievalQuery);
+    $PointRetrievalExecution = mysqli_query(ConnectionReturn(),$PointRetrievalQuery);
     if($PointRetrievalExecution){
         foreach($PointRetrievalExecution as $row){
             $CurrentPoints = $row["UserPoints"];
