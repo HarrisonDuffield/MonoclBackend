@@ -13,6 +13,36 @@
        $dbname = "monoclmain";
        $password="PHPPassword12";
        $ConnectionFunction = mysqli_connect($servername, $account, $password, $dbname);
+        function HomeworkLoading(){
+            global $ConnectionFunction;
+            $ClassID = "0";
+            $UserID = $_SESSION["UserLoggedIn"];
+            $ClassIDRetrievalQuery = "SELECT ClassID from userdetails WHERE UserID = $UserID";
+            $ClassIDRetrievalExec = mysqli_query($ConnectionFunction,$ClassIDRetrievalQuery);
+            foreach($ClassIDRetrievalExec as $row){
+                $ClassID =$row["ClassID"];
+            }
+            $HomeworkRetrievalQuery = "Select * from homeworktable WHERE ClassID = $ClassID";
+            $HomeworkRetrievalExecution = mysqli_query($ConnectionFunction,$HomeworkRetrievalQuery);
+            if($HomeworkRetrievalExecution){
+                echo "<tr> <th> HomeWork ID</th><th> Number Of Questions</th><th>Due date</th></tr>";
+            foreach($HomeworkRetrievalExecution as $row){
+                echo "<tr>";
+                $homeworkid = $row["HomeworkID"];
+                $duedate = $row["DueDate"];
+                $NumberOfQuestions =$row["Questions"].split("newitem").sizeof;
+                echo "<td> $homeworkid </td>";
+                echo "<td> $NumberOfQuestions </td>";
+                echo "<td> $duedate</td>";
+                echo"</tr>";
+            }
+            }
+            else{
+                mysqli_query($ConnectionFunction);
+            }
+
+        }
+
        function ClearQuestionArray(){
            
            global $QuestionDisplayArray;
