@@ -7,12 +7,97 @@
        $AnswerListArray = array();
        $Language = array();
        $PercentageForCircle = 0;
-       session_start();
+       
        $servername = "localhost:3306";
        $account = "PHPConnection2";
        $dbname = "monoclmain";
        $password="PHPPassword12";
+       if(!isset($_SESSION)){ 
+        session_start(); 
+        } 
        $ConnectionFunction = mysqli_connect($servername, $account, $password, $dbname);
+       function MarkAsDone($homeworkid){
+           global $ConnectionFunction;
+           $DeleteQuery = "DELETE FROM homeworktable where HomeworkID = $homeworkid";
+           $DeleteExecution = mysqli_query($ConnectionFunction,$DeleteQuery);
+           if($DeleteExecution){
+               return true;
+           }
+           else{
+               return false;
+           }
+       }
+        function WhoHasCompletedHomwork($HomeworkID){
+            global $ConnectionFunction;
+            $ClassID = 0;
+            $UserIDOfThoseInClass = array();
+            $QuestionsSetAsHomework =array();
+            $AmountOfAnswersCorrect =array();
+            $HomeworkStringTemp = "";//decleration to overwrite later
+            $GetQuestionsQuery = "SELECT * FROM homeworktable WHERE `HomeworkID` = '$HomeworkID'";
+            $GetQuestionExecution = mysqli_query($ConnectionFunction,$GetQuestionsQuery);
+            if($GetQuestionExecution){
+                foreach($GetQuestionExecution as $row){
+                    $HomeworkStringTemp =$row["Questions"];
+                    $ClassID = $row["ClassID"];
+                }
+                $QuestionsSetAsHomework = explode("newitem",$HomeworkStringTemp);
+                $GetClassUserIDs= "SELECT UserID FROM userdetails WHERE ClassID = '$ClassID'";
+                $GetClassUserIDExecution = mysqli_query($ConnectionFunction,$GetClassUserIDs);
+                if($GetClassUserIDExecution){
+                    foreach($GetClassUserIDExecution as $row){
+                        $itemtopush = $row["UserID"];
+                        array_push($UserIDOfThoseInClass,$itemtopush);
+                        array_push($AmountOfAnswersCorrect,0);
+                    }
+                    for($i =0;$i<count($QuestionsSetAsHomework);$i++){
+                        for($j=0;$j<count($UserIDOfThoseInClass);$j++){
+                        $UserID = $UserIDOfThoseInClass[$j];
+                        $GetQuestionAnswer = "SELECT * FROM answertable WHERE QuestionID = '$QuestionsSetAsHomework[$i]' AND `GeneralAvailibility` = 1 AND `UserID` = $UserID ";
+                        $GetQuestionAnswerExecution  = mysqli_query($ConnectionFunction,$GetQuestionAnswer);
+                        if(mysqli_num_rows($GetQuestionAnswerExecution)>=1){
+                            $currentCount = $AmountOfAnswersCorrect[$j];
+                            $currentCount = $currentCount+1;
+                            $AmountOfAnswersCorrect[$j]=$currentCount;
+                        }
+                        else{
+                            $currentCount = $AmountOfAnswersCorrect[$j];
+                            mysqli_error($ConnectionFunction);
+                        }
+                    }
+
+                }
+                echo "<tr>";
+                echo "<th> UserName</th>";
+                echo "<th> Percentage of Homework Correct /Complete</th>";
+                echo "</tr>";
+                for($g=0;$g<count($AmountOfAnswersCorrect);$g++){
+                    echo "test";
+                    $GetUserNameQuery = "Select UserName from userdetails WHERE UserID = $UserIDOfThoseInClass[$g]";
+                    $GetUserNameExec = mysqli_query($ConnectionFunction,$GetUserNameQuery);
+                    $UserNameToPrint = "";
+                    foreach($GetUserNameExec as $row){
+                        $UserNameToPrint = $row["UserName"];
+                    }
+                    $numerator = $AmountOfAnswersCorrect[$g];
+                    $Percentage = 100*($numerator / count($QuestionsSetAsHomework));
+
+                    echo"<tr>";
+                    echo "<td> $UserNameToPrint</td>";
+                    echo "<td>$Percentage %</td>";
+                    echo "</tr>";
+                }
+            }
+                else{
+                    mysqli_error($ConnectionFunction);
+                }
+            }
+            else{
+                echo mysqli_error($ConnectionFunction);
+            }
+
+        }
+
         function HomeworkLoading(){
             global $ConnectionFunction;
             $ClassID = "0";
@@ -30,7 +115,8 @@
                 echo "<tr>";
                 $homeworkid = $row["HomeworkID"];
                 $duedate = $row["DueDate"];
-                $NumberOfQuestions =$row["Questions"].split("newitem").sizeof;
+                $NumberOfQuestions =$row["Questions"];
+                $NumberOfQuestions = count(explode("newitem",$NumberOfQuestions));
                 echo "<td> $homeworkid </td>";
                 echo "<td> $NumberOfQuestions </td>";
                 echo "<td> $duedate</td>";
