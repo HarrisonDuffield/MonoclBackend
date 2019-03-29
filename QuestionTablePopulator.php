@@ -315,6 +315,31 @@
            
            
        }
+       function BigCiclePercentageCalc(){
+           global $ConnectionFunction;
+           $UserIDToUse = $_SESSION["UserLoggedIn"];
+           $Language = $_SESSION["Language"];
+           $AmountOfAnswersCorrectQuery = "SELECT * FROM answertable WHERE `UserID` = $UserIDToUse AND `GeneralAvailibility` = 1";
+           $AmountOfAnswersCorrectExec = mysqli_query($ConnectionFunction,$AmountOfAnswersCorrectQuery);
+           $AmountOfQuestionsQuery = "SELECT * FROM questiontable WHERE `Language` = '$Language'";
+           
+           $AmountOfQuestionsQueryExec = mysqli_query($ConnectionFunction,$AmountOfQuestionsQuery);
+           $AmountOfAnswersCorrect = mysqli_num_rows($AmountOfAnswersCorrectExec);
+           $AmountOfQuestions = mysqli_num_rows($AmountOfQuestionsQueryExec);
+           if($AmountOfAnswersCorrect == 0){
+               echo "0";
+           }
+           else if($AmountOfQuestions == 0){
+               echo "0";
+           }
+           else{
+            $TotalToReturn = 100*($AmountOfAnswersCorrect / $AmountOfQuestions);
+            $TotalToReturn =round($TotalToReturn);
+            echo "<b>$TotalToReturn %</b>";
+               
+           }
+
+       }
        function AnsweredPercentageRetrieval($UserIDToUse){
            global $AnswerPercentageArray;
            TopicListRetreival();
@@ -367,7 +392,7 @@
        }
        
        }
-       function BigCiclePercentageCalc(){
+       function BigCiclePercentageCalcDeprecated(){
            global $Language;
            $Language[0] = $_SESSION["Language"];
            AnsweredPercentageRetrieval($_SESSION["UserLoggedIn"]);
