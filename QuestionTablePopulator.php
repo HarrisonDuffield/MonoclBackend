@@ -319,7 +319,7 @@
            global $ConnectionFunction;
            $UserIDToUse = $_SESSION["UserLoggedIn"];
            $Language = $_SESSION["Language"];
-           $AmountOfAnswersCorrectQuery = "SELECT * FROM answertable WHERE `UserID` = $UserIDToUse AND `GeneralAvailibility` = 1";
+           $AmountOfAnswersCorrectQuery = "SELECT distinct QuestionID FROM answertable WHERE `UserID` = $UserIDToUse AND `GeneralAvailibility` = 1";
            $AmountOfAnswersCorrectExec = mysqli_query($ConnectionFunction,$AmountOfAnswersCorrectQuery);
            $AmountOfQuestionsQuery = "SELECT * FROM questiontable WHERE `Language` = '$Language'";
            
@@ -335,55 +335,37 @@
            else{
             $TotalToReturn = 100*($AmountOfAnswersCorrect / $AmountOfQuestions);
             $TotalToReturn =round($TotalToReturn);
-            echo "<b>$TotalToReturn %</b>";
+            echo "<b>$TotalToReturn%</b>";
                
            }
 
        }
        function AnsweredPercentageRetrieval($UserIDToUse){
-           global $AnswerPercentageArray;
+           global $AnswerPercentageArray,$Language,$ConnectionFunction;
+            $LanguageToUse = $Language[0];
            TopicListRetreival();
            $NumeratorOfAnsweredQuestionsInTopic = 0;
            $DenominatorOfTotalQuestionsInTopic = 0;
-           global $TopicDisplayArray,$QuestionDisplayArray,$AnswerListArray; 
-           
-           for($i =0;$i<count($TopicDisplayArray);$i++){
-               $NumeratorOfAnsweredQuestionsInTopic = 0;
-               $DenominatorOfTotalQuestionsInTopic = 0;
-               global $Language;
-               QuestionDisplayFunction($TopicDisplayArray[$i],$Language[0]);
-               //echo count($QuestionDisplayArray);
-               for($x = 0;$x<count($QuestionDisplayArray)-1;$x++){
-                     // echo $x;                  
-                   //echo $QuestionDisplayArray[$x];
-                   AnswerListRetreival($UserIDToUse,$QuestionDisplayArray[$x]);
-                  // echo $AnswerListArray[0];
-                   if(count($AnswerListArray)>=1){
-                       $NumeratorOfAnsweredQuestionsInTopic++;
-                       $DenominatorOfTotalQuestionsInTopic++;
-                    //   echo 999;
-                       //echo $NumeratorOfAnsweredQuestionsInTopic;
-                //echo 808;
-                  //   echo $DenominatorOfTotalQuestionsInTopic;
-                  ClearAnswerArray();
-                       
-                   }
-                   else{
-                      $DenominatorOfTotalQuestionsInTopic++;
-                      ClearAnswerArray();
-                   }
-                                
-            }
-            ClearQuestionArray();
+           global $TopicDisplayArray; 
+           for($i = 0;$i<count($TopicDisplayArray);$i++){
+               $GetQuestionsQuery = "SELECT * FROM questiontable WHERE `Topic` = '$TopicDisplayArray[$i]' AND `Language` = '$LanguageToUse'";
+               $GetQuestionsExection = mysqli_query($ConnectionFunction,$GetQuestionsQuery);
+               $DenominatorOfTotalQuestionsInTopic = mysqli_num_rows($GetQuestionsExection);
+               mysqli_free_result($GetQuestionsExection);
+               $GetAnswersQuery = "select  distinct answertable.QuestionID from answertable inner join questiontable on answertable.QuestionID = questiontable.QuestionID where questiontable.topic='$TopicDisplayArray[$i]' AND answertable.UserID = '$UserIDToUse'";
+               $GetAnswersExecution = mysqli_query($ConnectionFunction,$GetAnswersQuery,MYSQLI_STORE_RESULT);
+                          
+            if($GetAnswersExecution){
+                
+                $NumeratorOfAnsweredQuestionsInTopic = mysqli_num_rows($GetAnswersExecution);
             
-            
-            if($NumeratorOfAnsweredQuestionsInTopic>0){            
-            $PercentageToAdd = ($NumeratorOfAnsweredQuestionsInTopic/$DenominatorOfTotalQuestionsInTopic);
+                    
+            $PercentageToAdd =($NumeratorOfAnsweredQuestionsInTopic/$DenominatorOfTotalQuestionsInTopic);
             $PercentageToAdd = $PercentageToAdd*100;
             
             }
             else{
-                $PercentageToAdd = 0;
+                $PercentageToAdd =mysqli_error_list($ConnectionFunction);
             }
             //echo $PercentageToAdd;
             array_push($AnswerPercentageArray,$PercentageToAdd);
